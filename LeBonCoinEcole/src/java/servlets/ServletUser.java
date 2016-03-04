@@ -32,7 +32,7 @@ public class ServletUser extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        RequestDispatcher dp = request.getRequestDispatcher("index.html");
+        RequestDispatcher dp = request.getRequestDispatcher("index.jsp");
         dp.forward(request, response);
     }
 
