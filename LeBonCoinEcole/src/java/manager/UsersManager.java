@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package manager.users;
+package manager;
 
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
