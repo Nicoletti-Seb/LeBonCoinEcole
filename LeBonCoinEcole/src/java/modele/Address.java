@@ -25,12 +25,23 @@ public class Address implements Serializable {
     private String name;
     
     @Column(length = 5 )
-    private int areaCode;
+    private String areaCode;
     
     private String city;
     
     private String country;
     
+    public Address() {
+        
+    }
+    
+    public Address(int number, String name, String areaCode, String city, String country) {
+        this.number = number;
+        this.name = name;
+        this.areaCode = areaCode;
+        this.city = city;
+        this.country = country;
+    }
 
     public int getId() {
         return id;
@@ -56,11 +67,11 @@ public class Address implements Serializable {
         this.name = name;
     }
 
-    public int getAreaCode() {
+    public String getAreaCode() {
         return areaCode;
     }
 
-    public void setAreaCode(int areaCode) {
+    public void setAreaCode(String areaCode) {
         this.areaCode = areaCode;
     }
 

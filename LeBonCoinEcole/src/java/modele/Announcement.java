@@ -18,7 +18,6 @@ import javax.persistence.Id;
 import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 
 /**
  *
@@ -53,6 +52,15 @@ public class Announcement implements Serializable {
     @ManyToOne
     private Student student;
 
+    public Announcement() {
+        
+    }
+    
+    public Announcement(String title, String description) {
+        this.title = title;
+        this.description = description;
+    }
+    
     public String getTitle() {
         return title;
     }
@@ -109,7 +117,7 @@ public class Announcement implements Serializable {
         return student;
     }
 
-    public void setStudent(Student student) {
+    public void setUser(Student student) {
         this.student = student;
     }
     

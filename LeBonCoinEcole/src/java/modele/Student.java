@@ -18,42 +18,59 @@ import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
-
 @Entity
 public class Student implements Serializable {
-    
+
     private static final long serialVersionUID = 1L;
-    
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
-    
+
     private String lastname;
-    
+
     private String firstname;
-    
+
     private String username;
-    
+
     private String password;
-    
+
     @ManyToOne(cascade = {CascadeType.PERSIST})
     private School school;
-    
-    @OneToMany(cascade = {CascadeType.REMOVE}, orphanRemoval = true )
+
+    @OneToMany(cascade = {CascadeType.REMOVE}, orphanRemoval = true)
     private List<Address> address;
-    
-    @OneToMany(cascade = {CascadeType.REMOVE}, orphanRemoval = true )
+
+    @OneToMany(cascade = {CascadeType.REMOVE}, orphanRemoval = true)
     private List<PhoneNumber> phoneNumbers;
-    
-    @OneToMany(cascade = {CascadeType.REMOVE}, orphanRemoval = true )
+
+    @OneToMany(cascade = {CascadeType.REMOVE}, orphanRemoval = true)
     private List<Email> emails;
-    
+
     @Lob
     @Basic(fetch = FetchType.LAZY)
     private byte[] image;
-    
+
     @OneToMany(mappedBy = "student", cascade = {CascadeType.REMOVE}, orphanRemoval = true)
     private List<Announcement> announcements;
+
+    public Student() {
+
+    }
+
+    public Student(String lastname, String firstname, String username) {
+        this.lastname = lastname;
+        this.firstname = firstname;
+        this.username = username;
+    }
+
+    public Student(String lastname, String firstname, String username, String password, School school) {
+        this.lastname = lastname;
+        this.firstname = firstname;
+        this.username = username;
+        this.password = password;
+        this.school = school;
+    }
 
     public int getId() {
         return id;
@@ -143,7 +160,6 @@ public class Student implements Serializable {
         this.announcements = announcements;
     }
 
-    
     @Override
     public int hashCode() {
         int hash = 0;
@@ -164,5 +180,5 @@ public class Student implements Serializable {
     public String toString() {
         return "modele.users.User[ id=" + id + " ]";
     }
-    
+
 }

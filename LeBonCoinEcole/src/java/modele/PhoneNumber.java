@@ -24,6 +24,14 @@ public class PhoneNumber implements Serializable {
     @Column(length = 10)
     private int number;
 
+    public PhoneNumber() {
+        
+    }
+    
+    public PhoneNumber(int number) {
+        this.number = number;
+    }
+    
     public int getId() {
         return id;
     }

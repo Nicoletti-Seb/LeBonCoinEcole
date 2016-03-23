@@ -33,6 +33,15 @@ public class School implements Serializable {
     @OneToMany(mappedBy = "school")
     private List<Student> students;
     
+    public School() {
+        
+    }
+    
+    public School(String name, Address address) {
+        this.name = name;
+        this.address = address;
+    }
+    
     public int getId() {
         return id;
     }
@@ -57,7 +66,7 @@ public class School implements Serializable {
         this.address = address;
     }
 
-    public List<Student> getUsers() {
+    public List<Student> getStudents() {
         return students;
     }
     
