@@ -5,8 +5,6 @@
  */
 package utils;
 
-import java.util.Collection;
-import java.util.Iterator;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.ejb.Singleton;
@@ -14,8 +12,6 @@ import javax.ejb.Startup;
 import manager.CategoriesManager;
 import manager.SchoolsManager;
 import manager.UsersManager;
-import modele.Address;
-import modele.School;
 //import manager.StudentManager;
 
 /**
@@ -48,7 +44,7 @@ public class InitBDBonCoin {
         sm.createSchoolsTest();
         System.out.println("Initialisation de la base de donnée : School");
         
-        um.createStudent("toto", "toto", "toto");
+        um.createStudent("toto", "toto", "toto", "toto");
         um.createStudentsTest(5);
         System.out.println("Initialisation de la base de donnée : Students");
     }

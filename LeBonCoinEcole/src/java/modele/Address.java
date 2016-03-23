@@ -12,29 +12,29 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
-
 @Entity
 public class Address implements Serializable {
+
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
-    
+
     private int number;
-    
+
     private String name;
-    
-    @Column(length = 5 )
+
+    @Column(length = 5)
     private String areaCode;
-    
+
     private String city;
-    
+
     private String country;
-    
+
     public Address() {
-        
+
     }
-    
+
     public Address(int number, String name, String areaCode, String city, String country) {
         this.number = number;
         this.name = name;
@@ -90,8 +90,6 @@ public class Address implements Serializable {
     public void setCountry(String country) {
         this.country = country;
     }
-    
-    
 
     @Override
     public int hashCode() {
@@ -111,7 +109,8 @@ public class Address implements Serializable {
 
     @Override
     public String toString() {
-        return "modele.Address[ id=" + id + " ]";
+        return this.number + ", " + this.name + ", " + this.areaCode 
+                + " " + this.city + " (" + this.country + ")";
     }
-    
+
 }

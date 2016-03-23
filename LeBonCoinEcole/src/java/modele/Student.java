@@ -63,6 +63,13 @@ public class Student implements Serializable {
         this.firstname = firstname;
         this.username = username;
     }
+    
+    public Student(String lastname, String firstname, String username, String password) {
+        this.lastname = lastname;
+        this.firstname = firstname;
+        this.username = username;
+        this.password = password;
+    }
 
     public Student(String lastname, String firstname, String username, String password, School school) {
         this.lastname = lastname;

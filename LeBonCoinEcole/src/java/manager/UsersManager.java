@@ -42,6 +42,12 @@ public class UsersManager {
         return u;
     }
     
+    public Student createStudent(String lastname, String firstname, String username, String password) {
+        Student u = new Student(lastname, firstname, username, password);
+        em.persist(u);
+        return u;
+    }
+    
     public Student createStudent(String lastname, String firstname, String username, String password, School school) {
         Student u = new Student(lastname, firstname, username, password, school);
         em.persist(u);

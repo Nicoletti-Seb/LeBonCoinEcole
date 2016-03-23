@@ -7,72 +7,89 @@ package servlets;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Collection;
+import javax.ejb.EJB;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import manager.SchoolsManager;
+import manager.UsersManager;
+import modele.School;
+import modele.Student;
 
 /**
  *
  * @author Seb
  */
-@WebServlet(name = "ServletUser", urlPatterns = {"/ServletUser"})
+@WebServlet(name = "ServletUser", urlPatterns = {"/MonCompte"})
 public class ServletUser extends HttpServlet {
 
-    /**
-     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
-     * methods.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
-    protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        RequestDispatcher dp = request.getRequestDispatcher("index.jsp");
-        dp.forward(request, response);
-    }
-
-    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
-    /**
-     * Handles the HTTP <code>GET</code> method.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
+    @EJB
+    private UsersManager um;
+    
+    @EJB
+    private SchoolsManager sm;
+    
+    /*
+    * 3 pages possibles :
+    * - Création de compte
+    * - Afficher les informations du comptes
+    * - Modification des informations du comptes
+    *
+    * Sinon redirection vers la page de connexion/création de compte
+    */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        
+        // Verifier session avant d'autoriser le changement de page et d'action
+        HttpSession session = request.getSession();
+        if (session.getAttribute("student") == null) {
+            request.setAttribute("action", "formCreationComtpe");
+            
+            Collection<School> allSchools = sm.getAllSchools();
+            request.setAttribute("allSchools", allSchools);
+        } else {
+            request.setAttribute("action", "displayInfoCompte");
+        }
+        
+        RequestDispatcher dp = request.getRequestDispatcher("moncompte.jsp");
+        dp.forward(request, response);
     }
 
-    /**
-     * Handles the HTTP <code>POST</code> method.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
-    }
+     
+        String action = request.getParameter("action");
+        
+        if("connexion".equals(action)) {
+            String username = request.getParameter("username");
+            String password = request.getParameter("password");
 
-    /**
-     * Returns a short description of the servlet.
-     *
-     * @return a String containing servlet description
-     */
-    @Override
-    public String getServletInfo() {
-        return "Short description";
-    }// </editor-fold>
+            HttpSession session = request.getSession();
+            if(session.getAttributeNames() != null) {
+                if(um.isStudent(username, password)) {
+                    Student s = um.lookingByUsername(username);
+                    session.setAttribute("student", s);
+
+                    // redirection apres la connection
+                    response.sendRedirect(request.getContextPath());
+                } else {
+                    // redirection apres la connection
+                    response.sendRedirect(request.getContextPath() + "?alert=error");
+                }
+            }
+        } else if ("deconnexion".equals(action)) { 
+            request.getSession().invalidate();
+            
+            // redirection apres la deconnexion
+            response.sendRedirect(request.getContextPath());
+        }
+    }
 
 }
