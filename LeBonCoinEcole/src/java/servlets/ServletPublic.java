@@ -6,12 +6,20 @@
 package servlets;
 
 import java.io.IOException;
+import java.util.Collection;
+import javax.ejb.EJB;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import manager.CategoriesManager;
+import manager.SchoolsManager;
+import manager.UsersManager;
+import modele.Category;
+import modele.School;
+import modele.Student;
 
 /**
  *
@@ -20,17 +28,27 @@ import javax.servlet.http.HttpServletResponse;
 @WebServlet(name = "ServletPublic", urlPatterns = {"/ServletPublic"})
 public class ServletPublic extends HttpServlet {
 
-    /**
-     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
-     * methods.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
+    @EJB
+    private CategoriesManager cm;
+    
+    @EJB
+    private UsersManager um;
+    
+    @EJB
+    private SchoolsManager sm;
+    
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        
+        Collection<Category> allCategories = cm.getAllCategories();
+        request.setAttribute("allCategories", allCategories);
+
+        Collection<Student> allStudents = um.getAllStudents(0);
+        request.setAttribute("allStudents", allStudents);
+
+        Collection<School> allSchools = sm.getAllSchools();
+        request.setAttribute("allSchools", allSchools);
+        
         RequestDispatcher dp = request.getRequestDispatcher("index.jsp");
         dp.forward(request, response);
     }
