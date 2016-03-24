@@ -6,11 +6,15 @@
 package manager;
 
 import java.util.Collection;
+import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import modele.Address;
+import modele.Email;
+import modele.PhoneNumber;
 import modele.School;
 import modele.Student;
 import utils.RandomMot;
@@ -49,7 +53,29 @@ public class UsersManager {
     }
     
     public Student createStudent(String lastname, String firstname, String username, String password, School school) {
-        Student u = new Student(lastname, firstname, username, password, school);
+        Student u = new Student(lastname, firstname, username, password);
+        em.persist(u);
+        return u;
+    }
+    
+    public Student createStudent(String lastname, String firstname, String username, String password,
+            School school, List<Address> address, List<PhoneNumber> phoneNumbers,
+            List<Email> emails, byte[] image) {
+        
+        for (Address addr: address) {
+            em.persist(addr);
+        }
+        
+        for (PhoneNumber phone: phoneNumbers) {
+            em.persist(phone);
+        }
+        
+        for (Email email: emails) {
+            em.persist(email);
+        }
+        
+        Student u = new Student(lastname, firstname, username, password, school, address, 
+                phoneNumbers, emails, image);
         em.persist(u);
         return u;
     }

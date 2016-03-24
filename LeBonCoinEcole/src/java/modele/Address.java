@@ -110,7 +110,7 @@ public class Address implements Serializable {
     @Override
     public String toString() {
         return this.number + ", " + this.name + ", " + this.areaCode 
-                + " " + this.city + " (" + this.country + ")";
+                + " " + this.city + " - " + this.country;
     }
 
 }

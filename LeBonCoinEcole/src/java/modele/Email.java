@@ -65,7 +65,7 @@ public class Email implements Serializable {
 
     @Override
     public String toString() {
-        return "modele.Email[ id=" + id + " ]";
+        return this.email;
     }
     
 }

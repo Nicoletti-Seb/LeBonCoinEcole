@@ -14,24 +14,24 @@ import javax.persistence.Id;
 
 @Entity
 public class PhoneNumber implements Serializable {
-    
+
     private static final long serialVersionUID = 1L;
-    
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
-    
+
     @Column(length = 10)
-    private int number;
+    private String number;
 
     public PhoneNumber() {
-        
+
     }
-    
-    public PhoneNumber(int number) {
+
+    public PhoneNumber(String number) {
         this.number = number;
     }
-    
+
     public int getId() {
         return id;
     }
@@ -47,14 +47,14 @@ public class PhoneNumber implements Serializable {
         return hash;
     }
 
-    public int getNumber() {
+    public String getNumber() {
         return number;
     }
 
-    public void setNumber(int number) {
+    public void setNumber(String number) {
         this.number = number;
     }
-    
+
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
@@ -67,7 +67,7 @@ public class PhoneNumber implements Serializable {
 
     @Override
     public String toString() {
-        return "modele.PhoneNumber[ id=" + id + " ]";
+        return this.number;
     }
-    
+
 }

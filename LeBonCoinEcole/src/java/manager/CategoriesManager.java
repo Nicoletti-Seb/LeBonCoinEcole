@@ -24,6 +24,9 @@ public class CategoriesManager {
         
     public void createCategoriesTest() {
         createCategory("A");
+        createCategory("B");
+        createCategory("C");
+        createCategory("D");        
     }
 
     public Category createCategory(String name) {

@@ -63,7 +63,7 @@ public class Student implements Serializable {
         this.firstname = firstname;
         this.username = username;
     }
-    
+
     public Student(String lastname, String firstname, String username, String password) {
         this.lastname = lastname;
         this.firstname = firstname;
@@ -71,12 +71,18 @@ public class Student implements Serializable {
         this.password = password;
     }
 
-    public Student(String lastname, String firstname, String username, String password, School school) {
+    public Student(String lastname, String firstname, String username, String password,
+            School school, List<Address> address, List<PhoneNumber> phoneNumbers,
+            List<Email> emails, byte[] image) {
         this.lastname = lastname;
         this.firstname = firstname;
         this.username = username;
         this.password = password;
         this.school = school;
+        this.address = address;
+        this.phoneNumbers = phoneNumbers;
+        this.emails = emails;
+        this.image = image;
     }
 
     public int getId() {

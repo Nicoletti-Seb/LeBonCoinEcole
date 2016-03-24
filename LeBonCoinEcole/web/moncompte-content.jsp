@@ -1,9 +1,10 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix ="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix ="fmt" %>
 
-Mon Compte
-
 <c:if test="${requestScope['action'] == 'formCreationComtpe'}"> 
+    
+    <h1>Création de compte</h1>
+    
 <div id="formCreationComtpe">
     <!-- Formulaire de création de compte
     - lastname, firstname, username, password
@@ -30,7 +31,7 @@ Mon Compte
         <select>
             <c:forEach var="s" items="${requestScope['allSchools']}">
                 <option>
-                    ${s.name} (${s.address.toString()})
+                    ${s.toString()}
                 </option>
             </c:forEach>
         </select>
@@ -44,5 +45,30 @@ Mon Compte
 </c:if>
 
 <c:if test="${requestScope['action'] == 'displayInfoCompte'}"> 
-displayInfoCompte
+
+    <h1>Mes informations</h1>
+    
+    <c:set var="s" value="${requestScope['student']}"/> 
+    lastname : ${s.lastname}<br>
+    firstname : ${s.firstname}<br>
+    username : ${s.username}<br>
+    <!--password : ${s.password}<br>-->
+
+    address : <br>
+    <c:forEach var="addr" items="${s.address}">
+        ${addr}<br>
+    </c:forEach>
+
+    school : ${s.school}<br>
+
+    telephone : <br>
+    <c:forEach var="phone" items="${s.phoneNumbers}">
+        ${phone}<br>
+    </c:forEach>
+        
+    email : <br>
+    <c:forEach var="email" items="${s.emails}">
+        ${email}<br>
+    </c:forEach>
+    image :
 </c:if>

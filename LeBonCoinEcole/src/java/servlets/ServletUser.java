@@ -6,7 +6,6 @@
 package servlets;
 
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.Collection;
 import javax.ejb.EJB;
 import javax.servlet.RequestDispatcher;
@@ -55,6 +54,9 @@ public class ServletUser extends HttpServlet {
             request.setAttribute("allSchools", allSchools);
         } else {
             request.setAttribute("action", "displayInfoCompte");
+            
+            Student student = (Student) session.getAttribute("student");
+            request.setAttribute("student", student);
         }
         
         RequestDispatcher dp = request.getRequestDispatcher("moncompte.jsp");

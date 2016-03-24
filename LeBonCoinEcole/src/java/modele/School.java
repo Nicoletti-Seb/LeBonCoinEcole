@@ -88,6 +88,6 @@ public class School implements Serializable {
 
     @Override
     public String toString() {
-        return "modele.School[ id=" + id + " ]";
+        return this.name + " (" + this.address.toString() + ")";
     }
 }
