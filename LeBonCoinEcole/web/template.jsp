@@ -11,8 +11,7 @@
     <!-- Header -->
     <jsp:include page="header.jsp"/>
 
-    <!-- Body -->
-    <h1>${param.title}</h1>
+    <!-- Body -->s
     <jsp:include page="${param.content}.jsp"/>
 
     <!-- Footer  -->

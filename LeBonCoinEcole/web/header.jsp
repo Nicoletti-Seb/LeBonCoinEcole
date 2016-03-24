@@ -24,11 +24,12 @@
         </c:choose>
     </div>
 
-    
+</header>
+<nav>
     <div class="container-menu">
         <div class="menu">Rechercher</div>
         <div class="menu">Deposer une annonce</div>
         <div class="menu">Retirer une annonce</div>
         <div class="menu"><a href="MonCompte">Mon compte</a></div>
     </div>
-</header>
+</nav>

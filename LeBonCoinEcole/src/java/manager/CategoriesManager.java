@@ -8,9 +8,11 @@ package manager;
 import java.util.Collection;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
+import javax.persistence.OrderBy;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import modele.Category;
+import utils.RandomMot;
 
 /**
  *
@@ -23,10 +25,9 @@ public class CategoriesManager {
     private EntityManager em;
         
     public void createCategoriesTest() {
-        createCategory("A");
-        createCategory("B");
-        createCategory("C");
-        createCategory("D");        
+        for( int i = 0; i < 20; i++){
+            createCategory(RandomMot.build());
+        }
     }
 
     public Category createCategory(String name) {
@@ -36,7 +37,7 @@ public class CategoriesManager {
     }
     
     public Collection<Category> getAllCategories() {
-        Query q = em.createQuery("select c from Category c");
+        Query q = em.createQuery("select c from Category c order by c.name ASC");
         return q.getResultList();
     }
     

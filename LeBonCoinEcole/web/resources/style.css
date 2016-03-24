@@ -1,6 +1,9 @@
 body {
+    position: relative;
     margin: 0;
+    padding-bottom: 100px;
 }
+ 
  
 /* HEADER */
 header {
@@ -34,12 +37,15 @@ header .container-title form{
     top: 0;
 }
 
-header .container-menu{
+nav .container-menu{
     display: inline-flex;
     width: 100%;
     height: auto;
+    color: white;
+    font-size: 20px;
+    text-align: center;
 }
-header .container-menu .menu{
+nav .container-menu .menu{
     display: block;
     width: 100%;
     margin: auto;
@@ -47,7 +53,7 @@ header .container-menu .menu{
     background-color: #1D6997;
 }
 
-header .container-menu .menu:hover{
+nav .container-menu .menu:hover{
     background: #004775;
 }
 
@@ -56,13 +62,32 @@ footer{
     position: absolute;
     bottom: 0;
     width: 100%;
-    height: auto;
+    height: 100px;
     background-color: #f2f2f2;
     text-align: center;
 }
 
+
+/* Category menu*/
+.categories{
+    height:100%;
+    width: 200px;
+}
+
+.categories .category{
+    height: 30px;
+    width: 100%;
+    background-color: #ffab62;
+    color: white;
+    text-align: center;
+}
+
+.categories .category:hover{
+    background-color: #f56b2a;
+}
+
 @media screen and (max-width: 700px) {
-    header .container-menu{
+    nav .container-menu{
         display: block;
     }
 }
