@@ -16,15 +16,17 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import manager.AnnouncementsManager;
 import manager.CategoriesManager;
+import manager.SchoolsManager;
 import modele.Announcement;
 import modele.Category;
+import modele.School;
 
 /**
  *
  * @author Seb
  */
-@WebServlet(name = "ServletIndex", urlPatterns = {"", "/index"})
-public class ServletIndex extends HttpServlet {
+@WebServlet(name = "ServletSearch", urlPatterns = {"/search"})
+public class ServletSearch extends HttpServlet {
     
     private static final int NB_MAX_ANNOUNCEMENT = 10;
     
@@ -34,6 +36,9 @@ public class ServletIndex extends HttpServlet {
     @EJB
     private AnnouncementsManager am;
     
+    @EJB
+    private SchoolsManager sm;
+
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -52,7 +57,10 @@ public class ServletIndex extends HttpServlet {
         Collection<Announcement> announcements = am.getAnnouncements(0, NB_MAX_ANNOUNCEMENT);
         request.setAttribute("announcements", announcements);
         
-        RequestDispatcher dp = request.getRequestDispatcher("index.jsp");
+        Collection<School> schools = sm.getAllSchools();
+        request.setAttribute("schools", schools);
+        
+        RequestDispatcher dp = request.getRequestDispatcher("search.jsp");
         dp.forward(request, response);
     }
 
@@ -94,5 +102,5 @@ public class ServletIndex extends HttpServlet {
     public String getServletInfo() {
         return "Short description";
     }// </editor-fold>
-    
+
 }

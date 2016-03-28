@@ -4,7 +4,9 @@
 <header>
     
     <div class="container-title" >
-        <div class="title">leboncoin - universitaire</div>
+        <div class="title">
+            <a class="clickable" href="index">leboncoin - universitaire</a>
+        </div>
         
         <c:choose>
             <c:when test="${empty sessionScope.student}">
@@ -27,9 +29,9 @@
 </header>
 <nav>
     <div class="container-menu">
-        <div class="menu">Rechercher</div>
+        <div class="menu"><a class="clickable" href="search">Rechercher</a></div>
         <div class="menu">Deposer une annonce</div>
         <div class="menu">Retirer une annonce</div>
-        <div class="menu"><a href="MonCompte">Mon compte</a></div>
+        <div class="menu"><a class="clickable" href="MonCompte">Mon compte</a></div>
     </div>
 </nav>
