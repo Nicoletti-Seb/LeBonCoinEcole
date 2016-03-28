@@ -8,7 +8,6 @@ package manager;
 import java.util.Collection;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
-import javax.persistence.OrderBy;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import modele.Category;

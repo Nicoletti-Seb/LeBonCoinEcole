@@ -38,7 +38,14 @@ public class AnnouncementsManager {
     }
     
     public Collection<Announcement> getAllAnnouncements() {
-        Query q = em.createQuery("select a from Announcement a");
+        Query q = em.createQuery("select a from Announcement a ORDER BY a.startDate DESC");
+        return q.getResultList();
+    }
+    
+    public Collection<Announcement> getAnnouncements(int off, int end) {
+        Query q = em.createQuery("select a from Announcement a ORDER BY a.startDate DESC");
+        q.setFirstResult(off);
+        q.setMaxResults(end);
         return q.getResultList();
     }
     

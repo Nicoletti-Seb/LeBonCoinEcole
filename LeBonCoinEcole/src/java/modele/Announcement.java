@@ -52,9 +52,7 @@ public class Announcement implements Serializable {
     @ManyToOne
     private Student student;
 
-    public Announcement() {
-        
-    }
+    public Announcement() { }
     
     public Announcement(String title, String description) {
         this.title = title;

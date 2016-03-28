@@ -11,10 +11,12 @@ import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.ejb.Singleton;
 import javax.ejb.Startup;
+import manager.AnnouncementsManager;
 import manager.CategoriesManager;
 import manager.SchoolsManager;
 import manager.UsersManager;
 import modele.Address;
+import modele.Announcement;
 import modele.Email;
 import modele.PhoneNumber;
 //import manager.StudentManager;
@@ -41,6 +43,9 @@ public class InitBDBonCoin {
     @EJB
     SchoolsManager sm;
     
+    @EJB
+    AnnouncementsManager am;
+    
     @PostConstruct // IMPORTANT
     public void init() {
         cm.createCategoriesTest();
@@ -51,6 +56,9 @@ public class InitBDBonCoin {
         
         um.createStudentsTest(5);
         System.out.println("Initialisation de la base de donnée : Students");
+        
+        am.createAnnouncementsTest();
+        System.out.println("Initialisation de la base de donnée : Annoucements");
         
         Address addr1 = new Address(1, "rue 1", "00001", "Nice", "France");
         Address addr2 = new Address(2, "rue 2", "00002", "Nice", "France");

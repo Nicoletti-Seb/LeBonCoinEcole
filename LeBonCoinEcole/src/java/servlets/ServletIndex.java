@@ -14,7 +14,9 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import manager.AnnouncementsManager;
 import manager.CategoriesManager;
+import modele.Announcement;
 import modele.Category;
 
 /**
@@ -24,9 +26,14 @@ import modele.Category;
 @WebServlet(name = "ServletIndex", urlPatterns = {""})
 public class ServletIndex extends HttpServlet {
     
+    private static final int NB_MAX_ANNOUNCEMENT = 10;
+    
     @EJB
     private CategoriesManager cm;
 
+    @EJB
+    private AnnouncementsManager am;
+    
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -41,6 +48,9 @@ public class ServletIndex extends HttpServlet {
         
         Collection<Category> categories = cm.getAllCategories();
         request.setAttribute("categories", categories);
+        
+        Collection<Announcement> announcements = am.getAnnouncements(0, NB_MAX_ANNOUNCEMENT);
+        request.setAttribute("announcements", announcements);
         
         RequestDispatcher dp = request.getRequestDispatcher("index.jsp");
         dp.forward(request, response);
