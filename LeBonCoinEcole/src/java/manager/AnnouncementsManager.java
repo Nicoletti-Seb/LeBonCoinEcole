@@ -25,10 +25,12 @@ public class AnnouncementsManager {
     private EntityManager em;
         
     public void createAnnouncementsTest() {
-        createAnnouncement("A", "Text 1");
-        createAnnouncement("B", "Text 2");
-        createAnnouncement("C", "Text 3");
-        createAnnouncement("D", "Text 4");
+        for( int i = 0; i < 25; i++ ) {
+            createAnnouncement("A", "Text 1");
+            createAnnouncement("B", "Text 2");
+            createAnnouncement("C", "Text 3");
+            createAnnouncement("D", "Text 4");
+        }
     }
 
     public Announcement createAnnouncement(String title, String description) {
@@ -47,6 +49,11 @@ public class AnnouncementsManager {
         q.setFirstResult(off);
         q.setMaxResults(end);
         return q.getResultList();
+    }
+    
+    public Long countAnnouncements() {
+        Query q = em.createQuery("select COUNT(a) from Announcement a");
+        return (Long) q.getSingleResult();
     }
     
     public int deleteAnnouncement(int id) {

@@ -54,13 +54,20 @@ public class ServletSearch extends HttpServlet {
         Collection<Category> categories = cm.getAllCategories();
         request.setAttribute("categories", categories);
         
-        Collection<Announcement> announcements = am.getAnnouncements(0, NB_MAX_ANNOUNCEMENT);
+        int page = ( request.getParameter("page") != null )? Integer.parseInt(request.getParameter("page")) : 1;
+        Collection<Announcement> announcements = am.getAnnouncements((page-1) * NB_MAX_ANNOUNCEMENT, NB_MAX_ANNOUNCEMENT);
+        long nbElement = am.countAnnouncements();
+        int nbPages = (int) nbElement / NB_MAX_ANNOUNCEMENT;
+        if( nbElement % NB_MAX_ANNOUNCEMENT > 0){
+            nbPages++;
+        }
         request.setAttribute("announcements", announcements);
+        request.setAttribute("nbPages", nbPages);
         
         Collection<School> schools = sm.getAllSchools();
         request.setAttribute("schools", schools);
         
-        RequestDispatcher dp = request.getRequestDispatcher("search.jsp");
+        RequestDispatcher dp = request.getRequestDispatcher("search.jsp?page=" + page);
         dp.forward(request, response);
     }
 

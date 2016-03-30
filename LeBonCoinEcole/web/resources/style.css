@@ -98,8 +98,6 @@ footer{
 }
 
 .items form{
-    width: 100%;
-    height: auto;
     margin: 20px;
     text-align: center;
 }
@@ -185,6 +183,32 @@ a.clickable{
     height: 100%;
     text-decoration:none;
     color: inherit;
+}
+
+.paginations{
+    width: 100%;
+    height: auto;
+    margin: 10px 0px;
+    text-align: center;
+}
+
+.paginations .page{
+    display: inline-block;
+    width: 40px;
+    height: 40px;
+    line-height: 40px;
+    font-size: 25px;
+    font-weight: bolder;
+    text-align: center;
+    border-style: solid;
+    border-color: #f2f2f2;
+    border-width: 2px;
+    border-radius: 25px;
+}
+
+.paginations .selected, .paginations .page:hover{
+    background-color: #ffab62;
+    color: white;
 }
 
 /* Resize */
