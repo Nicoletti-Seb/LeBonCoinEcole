@@ -30,7 +30,7 @@
 <nav>
     <div class="container-menu">
         <div class="menu"><a class="clickable" href="search">Rechercher</a></div>
-        <div class="menu">Deposer une annonce</div>
+        <div class="menu"><a class="clickable" href="addAnnouncement">Deposer une annonce</a></div>
         <div class="menu">Retirer une annonce</div>
         <div class="menu"><a class="clickable" href="MonCompte">Mon compte</a></div>
     </div>

@@ -4,7 +4,7 @@
 <!DOCTYPE HTML>
 <html>
 <head>
-    <title>${param.title}</title>
+    <title>leboncoin - universitaire</title>
     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/resources/style.css" />
 </head>
 <body>
