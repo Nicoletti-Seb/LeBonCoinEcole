@@ -5,14 +5,14 @@
  */
 package manager;
 
+import java.util.ArrayList;
 import java.util.Collection;
-import javax.ejb.Startup;
+import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import modele.Announcement;
-import modele.Category;
 import modele.Student;
 
 /**
@@ -21,6 +21,8 @@ import modele.Student;
  */
 @Stateless
 public class AnnouncementsManager {
+    
+    private final List<String> categoriesSelected = new ArrayList<>();
     
     @PersistenceContext
     private EntityManager em;
@@ -68,4 +70,22 @@ public class AnnouncementsManager {
         q.setParameter("id", id);
         return q.executeUpdate();
     }
+    
+    public void updateCategoriesSelected(String category){
+        if( category == null || category.isEmpty() ){
+            return;
+        }
+        if( categoriesSelected.contains(category) ){
+            categoriesSelected.remove(category);
+        }
+        else{
+            categoriesSelected.add(category);
+        }
+    }
+
+    public List<String> getCategoriesSelected() {
+        return categoriesSelected;
+    }
+    
+    
 }

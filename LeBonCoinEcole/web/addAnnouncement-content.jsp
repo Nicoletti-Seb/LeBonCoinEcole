@@ -1,7 +1,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix ="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix ="fmt" %>
 
-<section>
+<article>
     <form id="form-AddAnnouncement" action="" method="POST">
         
         <h1>Deposer une annonce</h1>
@@ -33,4 +33,4 @@
         <input type="file"/>
         <button type="submit" class="button">Ajouter</button>
     </form>
-</section>
+</article>

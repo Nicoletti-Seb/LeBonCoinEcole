@@ -6,7 +6,9 @@
 package servlets;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import javax.ejb.EJB;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -46,11 +48,15 @@ public class ServletIndex extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         
+        am.updateCategoriesSelected(request.getParameter("category"));
+        request.setAttribute("categoriesSelected", am.getCategoriesSelected());
+        
         Collection<Category> categories = cm.getAllCategories();
         request.setAttribute("categories", categories);
         
         Collection<Announcement> announcements = am.getAnnouncements(0, NB_MAX_ANNOUNCEMENT);
         request.setAttribute("announcements", announcements);
+        
         
         RequestDispatcher dp = request.getRequestDispatcher("index.jsp");
         dp.forward(request, response);
@@ -94,5 +100,4 @@ public class ServletIndex extends HttpServlet {
     public String getServletInfo() {
         return "Short description";
     }// </editor-fold>
-    
 }

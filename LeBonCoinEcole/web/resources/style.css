@@ -19,7 +19,6 @@ body {
 header {
     width: 100%;
     height: auto;
-    color: white;
     font-size: 20px;
     text-align: center;
 }
@@ -36,6 +35,7 @@ header .container-title .title {
     display: block;
     text-align: left;
     margin-left: 10px;
+    color: white;
     font-size: 30px;
     font-weight: bold;
     font-family:cursive;
@@ -82,6 +82,10 @@ footer{
 /* search pages */
 .search-container{
     display: flex;
+}
+
+.search-container aside header{
+    color: #f56b2a;
 }
 
 .search-container .categories{
@@ -132,16 +136,27 @@ form h2{
     height: 30px;
     width: 200px;
     background-color: #ffab62;
+    margin: 3px;
     color: white;
     text-align: center;
 }
 
 .categories .category:hover{
     background-color: #f56b2a;
+    cursor: pointer;
 }
 
-form .categories .category{
-    margin: 3px;
+.category_selected{
+    background-color: #f56b2a !important;
+}
+
+label + input{
+    display: none;
+}
+
+
+form .categories input[type="submit"]{
+    visibility: hidden;
 }
 
 .search-container .items{

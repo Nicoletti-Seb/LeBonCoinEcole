@@ -1,18 +1,17 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix ="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix ="fmt" %>
 
-<div class="search-container">
-    <aside class="categories">
-        <c:forEach var="c" items="${categories}">
-            <div class="category">
-                ${c.name}
-            </div>
-        </c:forEach>
+<article class="search-container">
+    <aside>
+        <header>
+            <h2>Catégories</h2>
+        </header>
+        <%@include file="form-categories-selector.jsp" %>
     </aside>
 
     <section class="items">
 
-        <form action="" method="GET">
+        <form id="search-form" action="" method="GET">
             <select>
                 <option selected="selected" >Aucune école</option>
                 <c:forEach var="s" items="${schools}">
@@ -83,4 +82,4 @@
             </c:if>
         </nav>
     </section>
-</div>
+</article>
