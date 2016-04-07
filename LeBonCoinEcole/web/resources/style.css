@@ -80,6 +80,13 @@ footer{
 }
 
 /* search pages */
+
+.no-result{
+    margin: 20px;
+    font-size: 25px;
+    font-weight: bolder;
+}
+
 .search-container{
     display: flex;
 }

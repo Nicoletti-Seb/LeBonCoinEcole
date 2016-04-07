@@ -32,6 +32,13 @@ public class ServletSearch extends HttpServlet {
     
     private static final int NB_MAX_ANNOUNCEMENT = 10;
     
+    private final List<Category> categoriesSelected = new ArrayList<>();
+    private String school = new String();
+    private String codeArea = new String();
+    private String key = new String();
+    private int minPrice;
+    private int maxPrice;
+   
     @EJB
     private CategoriesManager cm;
 
@@ -53,15 +60,20 @@ public class ServletSearch extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         
-        am.updateCategoriesSelected(request.getParameter("category"));
-        request.setAttribute("categoriesSelected", am.getCategoriesSelected());
+        updateCategoriesSelected(request);
+        request.setAttribute("categoriesSelected", categoriesSelected);
+        
+        updateSearchValue(request);
         
         Collection<Category> categories = cm.getAllCategories();
         request.setAttribute("categories", categories);
         
         int page = ( request.getParameter("page") != null )? Integer.parseInt(request.getParameter("page")) : 1;
-        Collection<Announcement> announcements = am.getAnnouncements((page-1) * NB_MAX_ANNOUNCEMENT, NB_MAX_ANNOUNCEMENT);
-        long nbElement = am.countAnnouncements();
+        int off = (page-1) * NB_MAX_ANNOUNCEMENT;
+        
+        Collection<Announcement> announcements = am.searchAnnouncements(off, 
+                NB_MAX_ANNOUNCEMENT, key, school, codeArea, minPrice, maxPrice, categoriesSelected);
+        long nbElement = am.countSearchAnnouncements(key, school, codeArea, minPrice, maxPrice, categoriesSelected);
         int nbPages = (int) nbElement / NB_MAX_ANNOUNCEMENT;
         if( nbElement % NB_MAX_ANNOUNCEMENT > 0){
             nbPages++;
@@ -114,4 +126,61 @@ public class ServletSearch extends HttpServlet {
     public String getServletInfo() {
         return "Short description";
     }// </editor-fold>
+    
+    private void updateCategoriesSelected(HttpServletRequest request){
+        String categoryName = request.getParameter("category");
+        if( categoryName == null || categoryName.isEmpty() ){
+            return;
+        }
+        
+        Category category = cm.getCategory(categoryName);
+        if( category == null ){
+            return;
+        }
+        
+        if( categoriesSelected.contains(category) ){
+            categoriesSelected.remove(category);
+        }
+        else{
+            categoriesSelected.add(category);
+        }
+    }
+    
+    private void updateSearchValue(HttpServletRequest request){
+        
+        if( request.getParameter("school") != null ){
+            if( request.getParameter("school").equals("Aucune école") ){
+                this.school = "";
+            }
+            else{
+                this.school = request.getParameter("school");
+            }
+        }
+        
+        if( request.getParameter("codeArea") != null ){
+            this.codeArea = request.getParameter("codeArea");
+        }
+        
+        if( request.getParameter("key") != null ){
+            this.key = request.getParameter("key");
+        }
+        
+        if( request.getParameter("minPrice") != null){
+            try{
+                this.minPrice = Integer.parseInt(request.getParameter("minPrice"));
+            }catch(NumberFormatException e){
+                this.minPrice = 0;
+            }
+            
+        }
+        
+        if( request.getParameter("maxPrice") != null ){
+           try{
+                this.maxPrice = Integer.parseInt(request.getParameter("maxPrice"));
+            }catch(NumberFormatException e){
+                this.maxPrice = 0;
+            }
+        }
+    }
+    
 }

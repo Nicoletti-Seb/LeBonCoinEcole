@@ -45,4 +45,10 @@ public class CategoriesManager {
         q.setParameter("name", name);
         return q.executeUpdate();
     }
+    
+    public Category getCategory(String name) {
+        Query q = em.createQuery("select c from Category c WHERE c.name=:name");
+        q.setParameter("name", name);
+        return (Category)q.getSingleResult();
+    }
 }

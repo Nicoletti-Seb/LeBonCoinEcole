@@ -30,6 +30,8 @@ public class ServletIndex extends HttpServlet {
     
     private static final int NB_MAX_ANNOUNCEMENT = 10;
     
+    private final List<Category> categoriesSelected = new ArrayList<>();
+    
     @EJB
     private CategoriesManager cm;
 
@@ -48,8 +50,8 @@ public class ServletIndex extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         
-        am.updateCategoriesSelected(request.getParameter("category"));
-        request.setAttribute("categoriesSelected", am.getCategoriesSelected());
+        updateCategoriesSelected(request.getParameter("category"));
+        request.setAttribute("categoriesSelected", categoriesSelected);
         
         Collection<Category> categories = cm.getAllCategories();
         request.setAttribute("categories", categories);
@@ -100,4 +102,22 @@ public class ServletIndex extends HttpServlet {
     public String getServletInfo() {
         return "Short description";
     }// </editor-fold>
+    
+    public void updateCategoriesSelected(String categoryName){
+        if( categoryName == null || categoryName.isEmpty() ){
+            return;
+        }
+        
+        Category category = cm.getCategory(categoryName);
+        if( category == null ){
+            return;
+        }
+        
+        if( categoriesSelected.contains(category) ){
+            categoriesSelected.remove(category);
+        }
+        else{
+            categoriesSelected.add(category);
+        }
+    }
 }
