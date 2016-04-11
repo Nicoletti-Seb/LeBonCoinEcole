@@ -153,6 +153,7 @@ form h2{
     cursor: pointer;
 }
 
+.item:active,
 .menu:active,
 .button:active,
 .categories .category:active,

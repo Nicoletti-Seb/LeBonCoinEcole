@@ -32,6 +32,10 @@ public class AnnouncementsManager {
             createAnnouncement("D", "Text 4");
         }
     }
+    
+    public Announcement getAnnouncement (int id ){
+        return em.find(Announcement.class, id);
+    }
 
     public Announcement createAnnouncement(String title, String description) {
         Announcement a = new Announcement(title, description);
