@@ -59,6 +59,12 @@ public class Announcement implements Serializable {
         this.description = description;
     }
     
+    public Announcement(String title, String description, Student student) {
+        this.title = title;
+        this.description = description;
+        this.student = student;
+    }
+    
     public String getTitle() {
         return title;
     }

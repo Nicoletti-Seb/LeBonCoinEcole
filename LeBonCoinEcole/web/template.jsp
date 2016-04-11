@@ -12,8 +12,10 @@
     <jsp:include page="header.jsp"/>
 
     <!-- Body -->
-    <jsp:include page="${param.content}.jsp"/>
-
+    <div class="container">
+        <jsp:include page="${param.content}.jsp"/>
+    </div>
+    
     <!-- Footer  -->
     <jsp:include page="footer.jsp"/>
         

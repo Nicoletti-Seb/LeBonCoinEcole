@@ -13,6 +13,7 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import modele.Announcement;
 import modele.Category;
+import modele.Student;
 
 /**
  *
@@ -35,6 +36,12 @@ public class AnnouncementsManager {
 
     public Announcement createAnnouncement(String title, String description) {
         Announcement a = new Announcement(title, description);
+        em.persist(a);
+        return a;
+    }
+    
+    public Announcement createAnnouncement(String title, String description, Student student) {
+        Announcement a = new Announcement(title, description, student);
         em.persist(a);
         return a;
     }
