@@ -13,7 +13,7 @@
         <header>
             <form id="search-form" method="GET">
                 <select name="school">
-                    <option  selected="selected" >Aucune école</option>
+                    <option  selected="selected" value="">Aucune école</option>
                     <c:forEach var="s" items="${schools}">
                         <option>${s.name}</option>
                     </c:forEach>

@@ -15,18 +15,14 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import manager.AnnouncementsManager;
 import manager.CategoriesManager;
 import modele.Category;
+import utils.FormAddAnnouncementBean;
 
 @WebServlet(name = "ServletAddAnnouncement", urlPatterns = {"/addAnnouncement"})
 public class ServletAddAnnouncement extends HttpServlet {
-
-    private final List<Category> categories = new ArrayList<>();
-    private String title = new String();
-    private String description = new String();
-    private float price;
-    private byte[] image;
 
     @EJB
     private CategoriesManager cm;
@@ -46,6 +42,11 @@ public class ServletAddAnnouncement extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        HttpSession session = request.getSession();
+        if (session.getAttribute("formAddAnnouncementBean") == null) {
+            session.setAttribute("formAddAnnouncementBean", new FormAddAnnouncementBean());
+        }
+
         request.setAttribute("categories", cm.getAllCategories());
         RequestDispatcher dp = request.getRequestDispatcher("addAnnouncement.jsp");
         dp.forward(request, response);
@@ -63,13 +64,19 @@ public class ServletAddAnnouncement extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         if ("create".equals(request.getParameter("action"))) {
+            HttpSession session = request.getSession();
+            FormAddAnnouncementBean faab = (FormAddAnnouncementBean) session.getAttribute("formAddAnnouncementBean");
+
             updateFormValue(request);
-            if (am.createAnnouncement(title, description, price, categories, image) != null) {
+
+            if (am.createAnnouncement(faab.getTitle(), faab.getDescription(),
+                    faab.getPrice(), faab.getCategories(), faab.getImage()) != null) {
                 request.setAttribute("state", true);
             } else {
                 request.setAttribute("state", false);
             }
-            request.setAttribute("title", title);
+
+            request.setAttribute("title", faab.getTitle());
         }
 
         request.setAttribute("categories", cm.getAllCategories());
@@ -92,33 +99,33 @@ public class ServletAddAnnouncement extends HttpServlet {
      * @param request
      */
     private void updateFormValue(HttpServletRequest request) {
+        HttpSession session = request.getSession();
+        FormAddAnnouncementBean faab = (FormAddAnnouncementBean) session.getAttribute("formAddAnnouncementBean");
 
-        if (request.getParameter("title") != null) {
-            this.title = request.getParameter("title");
-        }
-
-        if (request.getParameter("description") != null) {
-            this.description = request.getParameter("description");
-        }
+        faab.setTitle(request.getParameter("title"));
+        faab.setDescription(request.getParameter("description"));
 
         if (request.getParameter("price") != null) {
             try {
-                this.price = Float.parseFloat(request.getParameter("price"));
+                faab.setPrice(Float.parseFloat(request.getParameter("price")));
             } catch (NumberFormatException e) {
-                this.price = 0f;
+                faab.setPrice(0f);
             }
         }
 
         if (request.getParameterValues("categories") != null) {
-            this.categories.clear();
+            List<Category> categories = new ArrayList<>();
 
             for (String name : request.getParameterValues("categories")) {
-                this.categories.add(cm.getCategory(name));
+                categories.add(cm.getCategory(name));
             }
+            faab.setCategories(categories);
+        } else {
+            faab.setCategories(null);
         }
 
         if (request.getParameter("image") != null) {
-            // TODO : 
+            //TODO
         }
     }
 }

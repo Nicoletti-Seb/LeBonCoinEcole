@@ -16,6 +16,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import manager.AnnouncementsManager;
 import manager.CategoriesManager;
 import modele.Announcement;
@@ -24,8 +25,6 @@ import modele.Announcement;
 public class ServletIndex extends HttpServlet {
 
     private static final int NB_MAX_ANNOUNCEMENT = 10;
-
-    private final List<String> categoriesSelected = new ArrayList<>();
 
     @EJB
     private CategoriesManager cm;
@@ -44,7 +43,12 @@ public class ServletIndex extends HttpServlet {
      */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+            throws ServletException, IOException {  
+        HttpSession session = request.getSession();
+        if( session.getAttribute("categoriesSelected") == null ){
+            session.setAttribute("categoriesSelected", new ArrayList<>());
+        }
+        
         updateParametersToSend(request);
         RequestDispatcher dp = request.getRequestDispatcher("index.jsp");
         dp.forward(request, response);
@@ -63,7 +67,7 @@ public class ServletIndex extends HttpServlet {
             throws ServletException, IOException {
 
         if ("updateCategories".equals(request.getParameter("action"))) {
-            updateCategoriesSelected(request.getParameter("category"));
+            updateCategoriesSelected(request.getSession(), request.getParameter("category"));
         }
         updateParametersToSend(request);
         response.sendRedirect(request.getContextPath());
@@ -74,6 +78,9 @@ public class ServletIndex extends HttpServlet {
      * announcements
      */
     private void updateParametersToSend(HttpServletRequest request) {
+        HttpSession session = request.getSession();
+        List<String> categoriesSelected = (List<String>)session.getAttribute("categoriesSelected");
+        
         //Categories
         request.setAttribute("categories", cm.getAllCategories());
         request.setAttribute("categoriesSelected", categoriesSelected);
@@ -99,11 +106,12 @@ public class ServletIndex extends HttpServlet {
      *
      * @param categoryName
      */
-    private void updateCategoriesSelected(String categoryName) {
+    private void updateCategoriesSelected(HttpSession session, String categoryName) {
         if (categoryName == null || categoryName.isEmpty()) {
             return;
         }
 
+        List<String> categoriesSelected = (List <String>)session.getAttribute("categoriesSelected");
         if (categoriesSelected.contains(categoryName)) {
             categoriesSelected.remove(categoryName);
         } else {

@@ -16,23 +16,17 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import manager.AnnouncementsManager;
 import manager.CategoriesManager;
 import manager.SchoolsManager;
 import modele.Announcement;
+import utils.SearchFormBean;
 
 @WebServlet(name = "ServletSearch", urlPatterns = {"/search"})
 public class ServletSearch extends HttpServlet {
 
     private static final int NB_MAX_ANNOUNCEMENT = 10;
-
-    private final List<String> categoriesSelected = new ArrayList<>();
-    private String school = new String();
-    private String codeArea = new String();
-    private String key = new String();
-    private int minPrice;
-    private int maxPrice;
-    private int page;
 
     @EJB
     private CategoriesManager cm;
@@ -55,10 +49,20 @@ public class ServletSearch extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        HttpSession session = request.getSession();
+
+        if (session.getAttribute("categoriesSelected") == null) {
+            session.setAttribute("categoriesSelected", new ArrayList<>());
+        }
+
+        if (session.getAttribute("searchFormBean") == null) {
+            session.setAttribute("searchFormBean", new SearchFormBean());
+        }
 
         updateSearchValue(request);
         updateParametersToSend(request);
-        RequestDispatcher dp = request.getRequestDispatcher("search.jsp?page=" + page);
+        SearchFormBean searchFormBean = (SearchFormBean) session.getAttribute("searchFormBean");
+        RequestDispatcher dp = request.getRequestDispatcher("search.jsp?page=" + searchFormBean.getPage());
         dp.forward(request, response);
     }
 
@@ -73,13 +77,16 @@ public class ServletSearch extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        HttpSession session = request.getSession();
 
         if ("updateCategories".equals(request.getParameter("action"))) {
-            updateCategoriesSelected(request.getParameter("category"));
+            updateCategoriesSelected(session, request.getParameter("category"));
         }
+
         updateSearchValue(request);
         updateParametersToSend(request);
-        response.sendRedirect(request.getContextPath() + "/search?page=" + page);
+        SearchFormBean searchFormBean = (SearchFormBean) session.getAttribute("searchFormBean");
+        response.sendRedirect(request.getContextPath() + "/search?page=" + searchFormBean.getPage());
     }
 
     /**
@@ -97,11 +104,12 @@ public class ServletSearch extends HttpServlet {
      *
      * @param categoryName
      */
-    private void updateCategoriesSelected(String categoryName) {
+    private void updateCategoriesSelected(HttpSession session, String categoryName) {
         if (categoryName == null || categoryName.isEmpty()) {
             return;
         }
 
+        List<String> categoriesSelected = (List<String>) session.getAttribute("categoriesSelected");
         if (categoriesSelected.contains(categoryName)) {
             categoriesSelected.remove(categoryName);
         } else {
@@ -114,16 +122,23 @@ public class ServletSearch extends HttpServlet {
      * announcements
      */
     private void updateParametersToSend(HttpServletRequest request) {
+        HttpSession session = request.getSession();
+        List<String> categoriesSelected = (List<String>) session.getAttribute("categoriesSelected");
+        SearchFormBean sfb = (SearchFormBean) session.getAttribute("searchFormBean");
+
         //Search announcements
         try {
-            page = Integer.parseInt(request.getParameter("page"));
+            sfb.setPage(Integer.parseInt(request.getParameter("page")));
         } catch (NumberFormatException e) {
-            page = 1;
+            sfb.setPage(1);
         }
-        int off = (page - 1) * NB_MAX_ANNOUNCEMENT;
+        int off = (sfb.getPage() - 1) * NB_MAX_ANNOUNCEMENT;
+
         Collection<Announcement> announcements = am.searchAnnouncements(off,
-                NB_MAX_ANNOUNCEMENT, key, school, codeArea, minPrice, maxPrice, categoriesSelected);
-        long nbElement = am.countSearchAnnouncements(key, school, codeArea, minPrice, maxPrice, categoriesSelected);
+                NB_MAX_ANNOUNCEMENT, sfb.getKey(), sfb.getSchool(), sfb.getAreaCode(), sfb.getMinPrice(), sfb.getMaxPrice(), categoriesSelected);
+
+        long nbElement = am.countSearchAnnouncements(sfb.getKey(), sfb.getSchool(), sfb.getAreaCode(),
+                sfb.getMinPrice(), sfb.getMaxPrice(), categoriesSelected);
 
         //Nb pages
         int nbPages = (int) nbElement / NB_MAX_ANNOUNCEMENT;
@@ -145,32 +160,25 @@ public class ServletSearch extends HttpServlet {
      * @param request
      */
     private void updateSearchValue(HttpServletRequest request) {
-        String schoolParam = request.getParameter("school");
-        if (request.getParameter("school") != null) {
-            this.school = (!"Aucune école".equals(schoolParam)) ? schoolParam : "";
-        }
-
-        if (request.getParameter("codeArea") != null) {
-            this.codeArea = request.getParameter("codeArea");
-        }
-
-        if (request.getParameter("key") != null) {
-            this.key = request.getParameter("key");
-        }
+        HttpSession session = request.getSession();
+        SearchFormBean sfb = (SearchFormBean) session.getAttribute("searchFormBean");
+        sfb.setSchool(request.getParameter("school"));
+        sfb.setAreaCode(request.getParameter("codeArea"));
+        sfb.setKey(request.getParameter("key"));
 
         if (request.getParameter("minPrice") != null) {
             try {
-                this.minPrice = Integer.parseInt(request.getParameter("minPrice"));
+                sfb.setMinPrice(Integer.parseInt(request.getParameter("minPrice")));
             } catch (NumberFormatException e) {
-                this.minPrice = 0;
+                sfb.setMinPrice(0);
             }
         }
 
         if (request.getParameter("maxPrice") != null) {
             try {
-                this.maxPrice = Integer.parseInt(request.getParameter("maxPrice"));
+                sfb.setMaxPrice(Integer.parseInt(request.getParameter("maxPrice")));
             } catch (NumberFormatException e) {
-                this.maxPrice = 0;
+                sfb.setMaxPrice(0);
             }
         }
     }
