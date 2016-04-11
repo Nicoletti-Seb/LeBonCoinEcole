@@ -43,11 +43,12 @@ public class ServletAddAnnouncement extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+
         HttpSession session = request.getSession();
         if (session.getAttribute("formAddAnnouncementBean") == null) {
             session.setAttribute("formAddAnnouncementBean", new FormAddAnnouncementBean());
         }
-
+        
         request.setAttribute("categories", cm.getAllCategories());
         RequestDispatcher dp = request.getRequestDispatcher("addAnnouncement.jsp");
         dp.forward(request, response);
@@ -64,7 +65,7 @@ public class ServletAddAnnouncement extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        
+
         StringBuilder params = new StringBuilder();
         
         if ("create".equals(request.getParameter("action"))) {

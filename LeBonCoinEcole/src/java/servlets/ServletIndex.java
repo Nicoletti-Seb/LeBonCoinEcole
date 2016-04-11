@@ -48,7 +48,6 @@ public class ServletIndex extends HttpServlet {
         if( session.getAttribute("categoriesSelected") == null ){
             session.setAttribute("categoriesSelected", new ArrayList<>());
         }
-        
         updateParametersToSend(request);
         RequestDispatcher dp = request.getRequestDispatcher("index.jsp");
         dp.forward(request, response);
@@ -80,7 +79,7 @@ public class ServletIndex extends HttpServlet {
     private void updateParametersToSend(HttpServletRequest request) {
         HttpSession session = request.getSession();
         List<String> categoriesSelected = (List<String>)session.getAttribute("categoriesSelected");
-        
+
         //Categories
         request.setAttribute("categories", cm.getAllCategories());
         request.setAttribute("categoriesSelected", categoriesSelected);
@@ -106,6 +105,7 @@ public class ServletIndex extends HttpServlet {
      *
      * @param categoryName
      */
+
     private void updateCategoriesSelected(HttpSession session, String categoryName) {
         if (categoryName == null || categoryName.isEmpty()) {
             return;
