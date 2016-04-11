@@ -153,17 +153,23 @@ form h2{
     cursor: pointer;
 }
 
-.category_selected{
-    background-color: #f56b2a !important;
+.menu:active,
+.button:active,
+.categories .category:active,
+input[type=checkbox]:active + label{
+    opacity: 0.5;
 }
 
-label + input{
+input[type=checkbox]:checked + label{
+    background-color: #f56b2a;
+}
+
+.hidden{
     display: none;
 }
 
-
-form .categories input[type="submit"]{
-    visibility: hidden;
+.category_selected{
+    background-color: #f56b2a !important;
 }
 
 .search-container .items{
@@ -370,7 +376,7 @@ a.clickable{
 
 .button:hover{
     color: #19B51B;
-    background-color: #dff0d8;
+    background-color: #b9ff96;
 }
 
 .success{

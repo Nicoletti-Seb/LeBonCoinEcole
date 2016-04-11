@@ -11,7 +11,7 @@
 
     <section class="items">
         <header>
-            <form id="search-form" action="" method="GET">
+            <form id="search-form" method="GET">
                 <select name="school">
                     <option  selected="selected" >Aucune école</option>
                     <c:forEach var="s" items="${schools}">
@@ -21,7 +21,7 @@
                 <input name="areaCode" type="text" maxlength="5" placeholder="Departement - Ex 06600" />
 
                 <label for="minPrice" >Prix min :</label>
-                <input name="minPrice" id="minPrice" type="number" min="0" max="999" />
+                <input name="minPrice" id="minPrice" type="numeric" min="0" />
 
                 <label for="maxPrice" >Prix max :</label>
                 <input name="maxPrice" id="maxPrice" type="numeric" min="0" max="999" />
@@ -65,7 +65,7 @@
                                 <h2 class="title"> ${a.title} </h2>
                                 <p class="desc">${a.description}</p>
                                 <p class="price">${a.price} &euro;</p>
-                                <p class="date">${a.startDate} hier</p>
+                                <p class="date">${a.startDate}</p>
                             </div>
                         </article>
                     </c:forEach>

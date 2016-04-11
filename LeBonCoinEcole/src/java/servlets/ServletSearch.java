@@ -32,7 +32,7 @@ public class ServletSearch extends HttpServlet {
     
     private static final int NB_MAX_ANNOUNCEMENT = 10;
     
-    private final List<Category> categoriesSelected = new ArrayList<>();
+    private final List<String> categoriesSelected = new ArrayList<>();
     private String school = new String();
     private String codeArea = new String();
     private String key = new String();
@@ -60,7 +60,7 @@ public class ServletSearch extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         
-        updateCategoriesSelected(request);
+        updateCategoriesSelected(request.getParameter("category"));
         request.setAttribute("categoriesSelected", categoriesSelected);
         
         updateSearchValue(request);
@@ -127,22 +127,16 @@ public class ServletSearch extends HttpServlet {
         return "Short description";
     }// </editor-fold>
     
-    private void updateCategoriesSelected(HttpServletRequest request){
-        String categoryName = request.getParameter("category");
+    private void updateCategoriesSelected(String categoryName){
         if( categoryName == null || categoryName.isEmpty() ){
             return;
         }
         
-        Category category = cm.getCategory(categoryName);
-        if( category == null ){
-            return;
-        }
-        
-        if( categoriesSelected.contains(category) ){
-            categoriesSelected.remove(category);
+        if( categoriesSelected.contains(categoryName) ){
+            categoriesSelected.remove(categoryName);
         }
         else{
-            categoriesSelected.add(category);
+            categoriesSelected.add(categoryName);
         }
     }
     

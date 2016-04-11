@@ -2,35 +2,31 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix ="fmt" %>
 
 <article>
-    <form id="form-AddAnnouncement" action="" method="POST">
+    <form id="form-AddAnnouncement" action="" method="GET">
         
         <h1>Deposer une annonce</h1>
         
-        <h2>Localisation</h2>
-        <select>
-            <option selected="selected" >Aucune école</option>
-            <c:forEach var="s" items="${schools}">
-                <option>${s.name}</option>
-            </c:forEach>
-        </select>
-        
         <h2>Categories</h2>
-         <aside class="categories">
+        <aside class="categories">
             <c:forEach var="c" items="${categories}">
-                <div class="category">
-                    ${c.name}
-                </div>
+                <input id="${c.name}" class="hidden" type="checkbox" name="categories"  value="${c.name}" />
+                <label class="category" for="${c.name}">${c.name}</label>
             </c:forEach>
         </aside>
         
         <h2>Titre</h2>
-        <input type="text" placeholder="Titre"/>
+        <input name="title" type="text" placeholder="Titre" required/>
         
         <h2>Description</h2>
-        <textarea></textarea>
+        <textarea name="description" required></textarea>
+        
+        <h2>Prix</h2>
+        <input type="number" name="price" min="1" step="0.01" required/>
         
         <h2>Image</h2>
-        <input type="file"/>
+        <input type="file" name="image" />
+        <input type="hidden" name="action" value="create" />
         <button type="submit" class="button">Ajouter</button>
+        
     </form>
 </article>

@@ -57,6 +57,17 @@ public class Announcement implements Serializable {
     public Announcement(String title, String description) {
         this.title = title;
         this.description = description;
+        this.startDate = new Date(System.currentTimeMillis());
+    }
+    
+    public Announcement(String title, String description, float price,
+            List<Category> categories, byte[] image ) {
+        this.title = title;
+        this.description = description;
+        this.price = price;
+        this.image = image;
+        this.startDate = new Date(System.currentTimeMillis());
+        this.categories = categories;
     }
     
     public Announcement(String title, String description, Student student) {

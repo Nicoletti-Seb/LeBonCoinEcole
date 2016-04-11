@@ -51,4 +51,10 @@ public class SchoolsManager {
         q.setParameter("id", id);
         return q.executeUpdate();
     }
+    
+    public School getSchool(String name) {
+        Query q = em.createQuery("select s from School s where s.name=:name");
+        q.setParameter("name", name);
+        return (School)q.getSingleResult();
+    }
 }

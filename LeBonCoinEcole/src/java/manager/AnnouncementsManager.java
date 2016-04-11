@@ -12,7 +12,6 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import modele.Announcement;
-import modele.Student;
 import modele.Category;
 
 /**
@@ -36,14 +35,15 @@ public class AnnouncementsManager {
 
     public Announcement createAnnouncement(String title, String description) {
         Announcement a = new Announcement(title, description);
-        em.persist(a);
+        em.merge(a);
         return a;
     }
     
-    public Announcement createAnnouncement(String title, String description, Student student) {
-        Announcement a = new Announcement(title, description, student);
-        em.persist(a);
-        return a;
+     public Announcement createAnnouncement(String title, String description, float price,
+             List<Category> categories, byte[] image ) {
+        
+        Announcement a = new Announcement(title, description, price, categories, image);
+        return em.merge(a);
     }
     
     public Collection<Announcement> getAllAnnouncements() {
@@ -52,17 +52,19 @@ public class AnnouncementsManager {
     }
     
     public Collection<Announcement> searchAnnouncements(int off, int end, String key, String nameSchool,
-                String areaCode, int minPrice, int maxPrice, List<Category> categories) {
-        String where = constructWhereRequest(key, nameSchool, areaCode, minPrice, maxPrice, categories);
+                String areaCode, int minPrice, int maxPrice, List<String> categories) {
+        String where = constructSearchWhereRequest(key, nameSchool, areaCode, minPrice, maxPrice, categories);
         Query q = null;
         if( where.isEmpty() ){
-            q = em.createQuery("select a from Announcement a ORDER BY a.startDate DESC");
+            q = em.createQuery("select a from Announcement a order by a.startDate desc");
         }
         else{
-            q = em.createQuery("select a from Announcement a WHERE " + where + " ORDER BY a.startDate DESC");
+            System.out.println("Request : " + "select a from Announcement a where " + where + " order by a.startDate desc");
+            q = em.createQuery("select distinct a from Announcement a where " + where + " order by a.startDate desc");
             
-            if( !categories.isEmpty() ){
-                q.setParameter("categories", categories);
+            
+           if( !categories.isEmpty() ){
+               q.setParameter("categories", categories);
             }
         }
         
@@ -73,19 +75,19 @@ public class AnnouncementsManager {
     }
     
     
-    private String constructWhereRequest(String key, String nameSchool,
-                String areaCode, int minPrice, int maxPrice, List<Category> categories){
+    private String constructSearchWhereRequest(String key, String nameSchool,
+                String areaCode, int minPrice, int maxPrice, List<String> categories){
         StringBuilder where = new StringBuilder();
         
         //KEY WORD
         if( !key.isEmpty() ){
-           where.append(" (a.title LIKE '%").append(key).append("%' OR a.description LIKE '%").append(key).append("%') ");
+           where.append(" (a.title like '%").append(key).append("%' or a.description like '%").append(key).append("%') ");
         }
         
         //SCHOOL
         if( !nameSchool.isEmpty() ){
             if( ! where.toString().isEmpty() ){
-                where.append(" AND ");
+                where.append(" and ");
             }
             where.append(" a.student.school.name = '").append(nameSchool).append("'");
         }
@@ -93,30 +95,30 @@ public class AnnouncementsManager {
         //AREA CODE
         if( !areaCode.isEmpty() ){
              if( ! where.toString().isEmpty() ){
-                where.append(" AND ");
+                where.append(" and ");
             }
             where.append(" a.student.school.address.codeArea = '").append(areaCode).append("'");;
         }
         
         //CATEGORIES
         if( !categories.isEmpty() ){
-             if( ! where.toString().isEmpty() ){
-                where.append(" AND ");
+            if( ! where.toString().isEmpty() ){
+                where.append(" and ");
             }
-            where.append(" a.categories IN :categories ");
+            where.append( " a.categories in ( select c from Category c where c.name in :categories ) ");
         }
         
         //PRICE
         if( minPrice > 0 ){
             if( ! where.toString().isEmpty() ){
-                where.append(" AND ");
+                where.append(" and ");
             }
             where.append(minPrice).append(" <= a.price ");
         }
         
         if( maxPrice > 0 ){
             if( ! where.toString().isEmpty() ){
-                where.append(" AND ");
+                where.append(" and ");
             }
             where.append("a.price <= ").append(maxPrice);
         }
@@ -125,31 +127,31 @@ public class AnnouncementsManager {
     }
     
     public long countSearchAnnouncements( String key, String nameSchool,
-                String areaCode, int minPrice, int maxPrice, List<Category> categories) {
-        String where = constructWhereRequest(key, nameSchool, areaCode, minPrice, maxPrice, categories);
+                String areaCode, int minPrice, int maxPrice, List<String> categories) {
+        String where = constructSearchWhereRequest(key, nameSchool, areaCode, minPrice, maxPrice, categories);
         Query q = null;
         if( where.isEmpty() ){
-            q = em.createQuery("select COUNT(a) from Announcement a");
+            q = em.createQuery("select count(a) from Announcement a");
         }
         else{
-            q = em.createQuery("select COUNT(a) from Announcement a WHERE " + where);
+            q = em.createQuery("select distinct count(a) from Announcement a WHERE " + where);
             
             if( !categories.isEmpty() ){
-                q.setParameter("categories", categories);
+               q.setParameter("categories", categories);
             }
         }
         return (Long)q.getSingleResult();
     }
     
     public Collection<Announcement> getAnnouncements(int off, int end) {
-        Query q = em.createQuery("select a from Announcement a ORDER BY a.startDate DESC");
+        Query q = em.createQuery("select a from Announcement a order by a.startDate desc");
         q.setFirstResult(off);
         q.setMaxResults(end);
         return q.getResultList();
     }
     
     public Long countAnnouncements() {
-        Query q = em.createQuery("select COUNT(a) from Announcement a");
+        Query q = em.createQuery("select count(a) from Announcement a");
         return (Long) q.getSingleResult();
     }
     

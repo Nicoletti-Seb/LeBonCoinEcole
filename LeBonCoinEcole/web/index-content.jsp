@@ -10,16 +10,28 @@
     </aside>
 
     <section class="items">
-        <c:forEach var="a" items="${announcements}">
-            <article class="item">
-                <img src="//static.leboncoin.fr/img/no-picture.png" /> 
-                <div class="description">
-                    <h2 class="title"> ${a.title} </h2>
-                    <p class="desc">${a.description}</p>
-                    <p class="price">${a.price} &euro;</p>
-                    <p class="date">${a.startDate} hier</p>
-                </div>
-            </article>
-        </c:forEach>
+        <c:choose>
+            <c:when test="${not empty announcements}">
+                <c:forEach var="a" items="${announcements}">
+                    <article class="item">
+                        <img src="//static.leboncoin.fr/img/no-picture.png" /> 
+                        <div class="description">
+                            <h2 class="title"> ${a.title} </h2>
+                            <p class="desc">${a.description}</p>
+                            <p class="price">${a.price} &euro;</p>
+                            <p class="date">${a.startDate}</p>
+                        </div>
+                    </article>
+                </c:forEach>
+            </c:when>
+            
+            <c:when test="${empty announcements}">
+                <section class="no-result">
+                    <p>
+                        Aucun résultat n'a été trouvé pour cette recherche...
+                    </p>
+                </section>
+            </c:when>
+        </c:choose>
     </section>
 </article>

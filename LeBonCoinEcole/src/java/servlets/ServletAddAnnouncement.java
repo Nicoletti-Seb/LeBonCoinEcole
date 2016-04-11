@@ -6,7 +6,8 @@
 package servlets;
 
 import java.io.IOException;
-import java.util.Collection;
+import java.util.ArrayList;
+import java.util.List;
 import javax.ejb.EJB;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -14,10 +15,9 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import manager.AnnouncementsManager;
 import manager.CategoriesManager;
-import manager.SchoolsManager;
 import modele.Category;
-import modele.School;
 
 /**
  *
@@ -26,11 +26,17 @@ import modele.School;
 @WebServlet(name = "ServletAddAnnouncement", urlPatterns = {"/addAnnouncement"})
 public class ServletAddAnnouncement extends HttpServlet {
     
-    @EJB
-    CategoriesManager cm;
+    private final List<Category> categories = new ArrayList<>();
+    private String title = new String();
+    private String description = new String();
+    private float price;
+    private byte[] image;
     
     @EJB
-    private SchoolsManager sm;
+    private CategoriesManager cm;
+    
+    @EJB
+    private AnnouncementsManager am;
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -43,15 +49,17 @@ public class ServletAddAnnouncement extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-
-        Collection<Category>categories = cm.getAllCategories();
-        request.setAttribute("categories", categories);
+       
+        request.setAttribute("categories", cm.getAllCategories());
         
-        Collection<School> schools = sm.getAllSchools();
-        request.setAttribute("schools", schools);
-        
-        RequestDispatcher dp = request.getRequestDispatcher("addAnnouncement.jsp");
-        dp.forward(request, response);
+        if( "create".equals(request.getParameter("action"))){
+            update(request);
+            am.createAnnouncement(this.title, this.description, this. price, this.categories, this.image);
+            response.sendRedirect(request.getContextPath());
+        }else{
+            RequestDispatcher dp = request.getRequestDispatcher("addAnnouncement.jsp");
+            dp.forward(request, response);
+        }
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
@@ -93,4 +101,34 @@ public class ServletAddAnnouncement extends HttpServlet {
         return "Short description";
     }// </editor-fold>
 
+    private void update(HttpServletRequest request){
+        
+        if( request.getParameter("title") != null ){
+            this.title = request.getParameter("title");
+        }
+        
+        if( request.getParameter("description") != null ){
+            this.description = request.getParameter("description");
+        }
+        
+        if( request.getParameter("price") != null ){
+            try{
+                this.price = Float.parseFloat(request.getParameter("price"));
+            }catch(NumberFormatException e){
+                this.price = 0f;
+            }
+        }
+        
+        if( request.getParameterValues("categories") != null ){
+            this.categories.clear();
+            
+            for( String name : request.getParameterValues("categories") ){
+                this.categories.add(cm.getCategory(name));
+            }
+        }
+        
+        if( request.getParameter("image") != null ){
+            // TODO : 
+        }
+    }
 }

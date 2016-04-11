@@ -30,7 +30,7 @@ public class ServletIndex extends HttpServlet {
     
     private static final int NB_MAX_ANNOUNCEMENT = 10;
     
-    private final List<Category> categoriesSelected = new ArrayList<>();
+    private final List<String> categoriesSelected = new ArrayList<>();
     
     @EJB
     private CategoriesManager cm;
@@ -56,9 +56,11 @@ public class ServletIndex extends HttpServlet {
         Collection<Category> categories = cm.getAllCategories();
         request.setAttribute("categories", categories);
         
-        Collection<Announcement> announcements = am.getAnnouncements(0, NB_MAX_ANNOUNCEMENT);
+        Collection<Announcement> announcements = am.searchAnnouncements(0, 
+                NB_MAX_ANNOUNCEMENT, "", "", "", 0, 0, categoriesSelected);
         request.setAttribute("announcements", announcements);
         
+        System.out.println("Categories "  + categoriesSelected);
         
         RequestDispatcher dp = request.getRequestDispatcher("index.jsp");
         dp.forward(request, response);
@@ -103,21 +105,16 @@ public class ServletIndex extends HttpServlet {
         return "Short description";
     }// </editor-fold>
     
-    public void updateCategoriesSelected(String categoryName){
+    private void updateCategoriesSelected(String categoryName){
         if( categoryName == null || categoryName.isEmpty() ){
             return;
         }
         
-        Category category = cm.getCategory(categoryName);
-        if( category == null ){
-            return;
-        }
-        
-        if( categoriesSelected.contains(category) ){
-            categoriesSelected.remove(category);
+        if( categoriesSelected.contains(categoryName) ){
+            categoriesSelected.remove(categoryName);
         }
         else{
-            categoriesSelected.add(category);
+            categoriesSelected.add(categoryName);
         }
     }
 }
