@@ -82,9 +82,7 @@ public class ServletSearch extends HttpServlet {
         if ("updateCategories".equals(request.getParameter("action"))) {
             updateCategoriesSelected(session, request.getParameter("category"));
         }
-
-        updateSearchValue(request);
-        updateParametersToSend(request);
+        
         SearchFormBean searchFormBean = (SearchFormBean) session.getAttribute("searchFormBean");
         response.sendRedirect(request.getContextPath() + "/search?page=" + searchFormBean.getPage());
     }

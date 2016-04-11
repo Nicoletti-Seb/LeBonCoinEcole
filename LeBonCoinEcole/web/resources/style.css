@@ -384,16 +384,18 @@ a.clickable{
     color: #3c763d;
     background-color: #dff0d8;
     border-color: #d6e9c6;
-}
-
-.danger{
-    color: #a94442;
-    background-color: #f2dede;
-    border-color: #ebccd1;
+    margin: 10px auto;
+    padding: 10px;
+    max-width: 500px;
+    border-radius: 5px;
 }
 
 .info{
     color: #31708f;
     background-color: #d9edf7;
     border-color: #bce8f1;
+    margin: 10px auto;
+    padding: 10px;
+    max-width: 500px;
+    border-radius: 5px;
 }

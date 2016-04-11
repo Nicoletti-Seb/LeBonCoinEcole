@@ -19,6 +19,7 @@ import javax.servlet.http.HttpSession;
 import manager.AnnouncementsManager;
 import manager.CategoriesManager;
 import modele.Category;
+import modele.Student;
 import utils.FormAddAnnouncementBean;
 
 @WebServlet(name = "ServletAddAnnouncement", urlPatterns = {"/addAnnouncement"})
@@ -63,24 +64,29 @@ public class ServletAddAnnouncement extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        
+        StringBuilder params = new StringBuilder();
+        
         if ("create".equals(request.getParameter("action"))) {
             HttpSession session = request.getSession();
             FormAddAnnouncementBean faab = (FormAddAnnouncementBean) session.getAttribute("formAddAnnouncementBean");
-
+            Student student = (Student) session.getAttribute("student");
+            
             updateFormValue(request);
-
-            if (am.createAnnouncement(faab.getTitle(), faab.getDescription(),
+            
+            if (am.createAnnouncement(student, faab.getTitle(), faab.getDescription(),
                     faab.getPrice(), faab.getCategories(), faab.getImage()) != null) {
-                request.setAttribute("state", true);
+                request.setAttribute("success", true);
+                params.append("?success=true");
             } else {
-                request.setAttribute("state", false);
+                request.setAttribute("error", true);
+                params.append("?error=true");
             }
 
-            request.setAttribute("title", faab.getTitle());
+            params.append("&title=").append(faab.getTitle());
         }
 
-        request.setAttribute("categories", cm.getAllCategories());
-        response.sendRedirect(request.getContextPath() + "/addAnnouncement");
+        response.sendRedirect(request.getContextPath() + "/addAnnouncement" + params);
     }
 
     /**

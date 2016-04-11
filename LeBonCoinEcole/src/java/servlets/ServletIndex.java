@@ -69,7 +69,7 @@ public class ServletIndex extends HttpServlet {
         if ("updateCategories".equals(request.getParameter("action"))) {
             updateCategoriesSelected(request.getSession(), request.getParameter("category"));
         }
-        updateParametersToSend(request);
+        
         response.sendRedirect(request.getContextPath());
     }
 

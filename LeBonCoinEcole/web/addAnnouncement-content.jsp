@@ -2,6 +2,19 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix ="fmt" %>
 
 <section class="container-form">
+    <header>
+        <c:if test="${param.success}">
+            <div class="success">
+                L'annonce ${param.title} à bien été ajouté !
+            </div>
+        </c:if>
+        
+        <c:if test="${param.error}">
+            <div class="info">
+                L'annonce ${param.title} n'a pas pu être ajouté...
+            </div>
+        </c:if>
+    </header>
     <form id="form-AddAnnouncement" action="" method="POST">
 
         <h1>Deposer une annonce</h1>
