@@ -30,10 +30,17 @@
 <nav>
     <div class="container-menu">
         <div class="menu"><a class="clickable" href="search">Rechercher</a></div>
-        <div class="menu"><a class="clickable" href="addAnnouncement">Deposer une annonce</a></div>
         <c:if test="${!empty sessionScope.student}">
+            <div class="menu"><a class="clickable" href="addAnnouncement">Deposer une annonce</a></div>
             <div class="menu"><a class="clickable" href="MyAnnouncements">Mes annonces</a></div>
         </c:if>
-        <div class="menu"><a class="clickable" href="MonCompte">Mon compte</a></div>
+        <c:choose>
+            <c:when test="${empty sessionScope.student}">
+                <div class="menu"><a class="clickable" href="MonCompte">Créer mon compte</a></div>   
+            </c:when>
+            <c:otherwise>
+                <div class="menu"><a class="clickable" href="MonCompte">Mon compte</a></div>   
+            </c:otherwise>
+        </c:choose>
     </div>
 </nav>

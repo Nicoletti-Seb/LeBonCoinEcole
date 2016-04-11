@@ -96,10 +96,11 @@ public class ServletUser extends HttpServlet {
             String username = request.getParameter("username");
             String password = request.getParameter("password");
 
-            if (session.getAttributeNames() != null) {
+            if (session.getAttribute("student")== null) {
                 if (um.isStudent(username, password)) {
                     Student s = um.lookingByUsername(username);
                     session.setAttribute("student", s);
+                    session.setMaxInactiveInterval(1800);
 
                     // redirection apres la connection
                     response.sendRedirect(request.getContextPath());
@@ -109,7 +110,7 @@ public class ServletUser extends HttpServlet {
                 }
             }
         } else if ("deconnexion".equals(action)) {
-            request.getSession().invalidate();
+            session.invalidate();
 
             // redirection apres la deconnexion
             response.sendRedirect(request.getContextPath());
