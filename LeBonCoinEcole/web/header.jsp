@@ -31,7 +31,9 @@
     <div class="container-menu">
         <div class="menu"><a class="clickable" href="search">Rechercher</a></div>
         <div class="menu"><a class="clickable" href="addAnnouncement">Deposer une annonce</a></div>
-        <div class="menu">Retirer une annonce</div>
+        <c:if test="${!empty sessionScope.student}">
+            <div class="menu"><a class="clickable" href="MyAnnouncements">Mes annonces</a></div>
+        </c:if>
         <div class="menu"><a class="clickable" href="MonCompte">Mon compte</a></div>
     </div>
 </nav>

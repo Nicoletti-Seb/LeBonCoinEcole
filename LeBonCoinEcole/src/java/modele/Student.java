@@ -6,6 +6,7 @@
 package modele;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
@@ -35,7 +36,7 @@ public class Student implements Serializable {
 
     private String password;
 
-    @ManyToOne(cascade = {CascadeType.PERSIST})
+    @ManyToOne
     private School school;
 
     @OneToMany(cascade = {CascadeType.REMOVE}, orphanRemoval = true)
@@ -83,6 +84,7 @@ public class Student implements Serializable {
         this.phoneNumbers = phoneNumbers;
         this.emails = emails;
         this.image = image;
+        this.announcements = new ArrayList<Announcement>();
     }
 
     public int getId() {

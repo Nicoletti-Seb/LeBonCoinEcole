@@ -27,6 +27,8 @@ public class School implements Serializable {
     
     private String name;
     
+    private String link;
+    
     @OneToOne(cascade = {CascadeType.REMOVE}, orphanRemoval = true)
     private Address address;
     
@@ -37,9 +39,10 @@ public class School implements Serializable {
         
     }
     
-    public School(String name, Address address) {
+    public School(String name, Address address, String link) {
         this.name = name;
         this.address = address;
+        this.link = link;
     }
     
     public int getId() {
@@ -56,6 +59,14 @@ public class School implements Serializable {
     
     public void setName(String name) {
         this.name = name;
+    }
+    
+    public String getLink() {
+        return link;
+    }
+    
+    public void setLink(String link) {
+        this.link = link;
     }
 
     public Address getAddress() {

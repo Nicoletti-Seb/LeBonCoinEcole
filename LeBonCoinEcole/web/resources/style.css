@@ -1,4 +1,15 @@
+html {
+  height: 100%;
+}
+
 body {
+    min-height: 100%;
+    position: relative;
+    margin: 0;
+}
+
+.container {
+    min-height: 100%;
     position: relative;
     margin: 0;
     padding-bottom: 100px;
@@ -79,25 +90,26 @@ footer{
     height:100%;
 }
 
-#form-AddAnnouncement{
+/* container formulaire */
+.container-form form{
     margin: 20px 100px;
     background-color: #fbfbfb;
     padding: 50px;
     border-radius: 10px;
 }
 
-#form-AddAnnouncement .categories{
+.container-form form .categories{
     text-align: center;
 }
 
-#form-AddAnnouncement button[type="submit"]{
+.container-form form button[type="submit"]{
     display: block;
     width: 200px;
     height: 30px;
     margin: 5px auto;
 }
 
-#form-AddAnnouncement textArea{
+.container-form form textArea{
     width: 100%;
     height: 100px;
     resize: none;
@@ -215,6 +227,37 @@ form .categories .category{
     margin: 0px;
 }
 
+/* Formulaire création de compte */
+#compte-form .multibock input {
+    margin: 0px 10px 10px 0px;
+}
+
+#compte-form .multibock {
+    margin: 10px 0px;
+    display: block;
+}
+
+.largeur-60 {
+    width: 60px;
+}
+
+.largeur-300 {
+    width: 300px;
+}
+
+.largeur-100 {
+    width: 100px;
+}
+
+/* Display compte */
+#displayCompte img {
+    width: 130px;
+}
+
+#displayCompte h4 {
+    margin-right: 20px;
+    color: #1D6997;    
+}
 
 /* Create zone clickable */
 a.clickable{
@@ -270,8 +313,12 @@ a.clickable{
         max-width: none;
     }
     
-    #form-AddAnnouncement{
+    .container-form form{
         margin: 20px 0px;
+    }
+    
+    .container-form form input{
+        margin: 3px 0px;
     }
 }
 

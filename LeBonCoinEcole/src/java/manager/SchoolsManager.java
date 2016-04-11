@@ -24,13 +24,16 @@ public class SchoolsManager {
     private EntityManager em;
 
     public void createSchoolsTest() {
-        createSchool("A", new Address(10, "rue de la boustifaille", "06600", "Nice", "France"));
+        createSchool("A", new Address(10, "rue de la boustifaille", "06600", "Nice", "France"), "www.google.fr");
+        createSchool("C", new Address(), "c");
+        createSchool("D", new Address(), "d");
+        createSchool("E", new Address(), "e");
     }
 
-    public School createSchool(String name, Address address) {
+    public School createSchool(String name, Address address, String link) {
         em.persist(address);
-        School s = new School(name, address);
-        em.persist(s);
+        School s = new School(name, address, link);
+        em.merge(s);
         return s;
     }
 
@@ -39,9 +42,13 @@ public class SchoolsManager {
         return q.getResultList();
     }
 
-    public int deleteSchool(String name) {
-        Query q = em.createQuery("delete from School s where s.name=:name");
-        q.setParameter("name", name);
+    public School getSchool(int id) {
+        return em.find(School.class, id);
+    }
+    
+    public int deleteSchool(int id) {
+        Query q = em.createQuery("delete from School s where s.id=:id");
+        q.setParameter("id", id);
         return q.executeUpdate();
     }
 }

@@ -30,9 +30,9 @@ public class UsersManager {
     // "Insert Code > Add Business Method")
     @PersistenceContext
     private EntityManager em;
-    
+
     private static final int NB_USER = 10;
-    
+
     public void createStudentsTest() {
         createStudent("John", "Lennon", "jlennon");
         createStudent("Paul", "Mac Cartney", "pmc");
@@ -45,36 +45,36 @@ public class UsersManager {
         em.persist(u);
         return u;
     }
-    
+
     public Student createStudent(String lastname, String firstname, String username, String password) {
         Student u = new Student(lastname, firstname, username, password);
         em.persist(u);
         return u;
     }
-    
+
     public Student createStudent(String lastname, String firstname, String username, String password, School school) {
         Student u = new Student(lastname, firstname, username, password);
         em.persist(u);
         return u;
     }
-    
+
     public Student createStudent(String lastname, String firstname, String username, String password,
             School school, List<Address> address, List<PhoneNumber> phoneNumbers,
             List<Email> emails, byte[] image) {
-        
-        for (Address addr: address) {
+
+        for (Address addr : address) {
             em.persist(addr);
         }
-        
-        for (PhoneNumber phone: phoneNumbers) {
+
+        for (PhoneNumber phone : phoneNumbers) {
             em.persist(phone);
         }
-        
-        for (Email email: emails) {
+
+        for (Email email : emails) {
             em.persist(email);
         }
-        
-        Student u = new Student(lastname, firstname, username, password, school, address, 
+
+        Student u = new Student(lastname, firstname, username, password, school, address,
                 phoneNumbers, emails, image);
         em.persist(u);
         return u;
@@ -102,7 +102,7 @@ public class UsersManager {
         q.setFirstResult(off);
         return q.getResultList();
     }
-    
+
     public Student lookingByUsername(String username) {
         Query q = em.createQuery("select s from Student s where s.username=:username");
         q.setParameter("username", username);
@@ -114,13 +114,48 @@ public class UsersManager {
         }
     }
 
-    public Student updateStudent(String lastname, String firstname, String username) {
+    public Student updateStudent(String lastname, String firstname, String username, String password,
+            School school, List<Address> address, List<PhoneNumber> phoneNumbers,
+            List<Email> emails, byte[] image) {
         Student s = lookingByUsername(username);
         if (s == null) {
             return null;
         }
-        s.setLastname(lastname);
-        s.setFirstname(firstname);
+        if (!lastname.isEmpty()) {
+            s.setLastname(lastname);
+        }
+        if (!firstname.isEmpty()) {
+            s.setFirstname(firstname);
+        }
+        if (!password.isEmpty()) {
+            s.setPassword(password);
+        }
+        
+        if (school != null) {
+            s.setSchool(school);
+        }
+        
+        if (address != null) {
+            for (Address addr : address) {
+                em.persist(addr);
+            }
+            s.setAddress(address);
+        }
+
+        if (phoneNumbers != null) {
+            for (PhoneNumber phone : phoneNumbers) {
+                em.persist(phone);
+            }
+            s.setPhoneNumbers(phoneNumbers);
+        }
+
+        if (emails != null) {
+            for (Email email : emails) {
+                em.persist(email);
+            }
+            s.setEmails(emails);
+        }
+
         return s;
     }
 
@@ -139,4 +174,20 @@ public class UsersManager {
             return s.getPassword().equals(password);
         }
     }
+
+    // methode pour associer une école à un étudiant
+    public Student addSchool(School school, int idStudent) {
+        Student s = em.find(Student.class, idStudent);
+        if (s == null) {
+            return null;
+        }
+        s.setSchool(school);
+        return s;
+    }
+
+//    public int addSchool(int idSchool, int idStudent) {
+//        Query q = em.createQuery("update student set school_id="+idSchool
+//                + " where id="+idStudent);
+//        return q.executeUpdate();
+//    }
 }
