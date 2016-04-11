@@ -25,13 +25,13 @@
 
                 <label for="maxPrice" >Prix max :</label>
                 <input name="maxPrice" id="maxPrice" type="numeric" min="0" max="999" />
-                
+
                 <input name ="key" type="text" placeholder="Mots clés" /> 
-                
+
                 <button class="button" type="submit">Envoyer</button>
             </form>
         </header>
-        
+
         <c:choose>
             <c:when test="${nbPages >= 1}">
                 <section>
@@ -48,7 +48,7 @@
                                 </c:when>
                                 <c:when test="${i != param.page}">
                                     <div class="page"><a class="clickable" href="search?page=${i}">${i}</a></div>
-                                </c:when>
+                                    </c:when>
 
                             </c:choose>
                         </c:forEach>
@@ -83,7 +83,7 @@
                                 </c:when>
                                 <c:when test="${i != param.page}">
                                     <div class="page"><a class="clickable" href="search?page=${i}">${i}</a></div>
-                                </c:when>
+                                    </c:when>
 
                             </c:choose>
                         </c:forEach>
@@ -94,7 +94,7 @@
                     </nav>
                 </section>
             </c:when>
-            
+
             <c:when test="${nbPages <= 0}">
                 <section class="no-result">
                     <p>

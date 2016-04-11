@@ -19,52 +19,19 @@ import javax.servlet.http.HttpServletResponse;
 import manager.AnnouncementsManager;
 import manager.CategoriesManager;
 import modele.Announcement;
-import modele.Category;
 
-/**
- *
- * @author Seb
- */
 @WebServlet(name = "ServletIndex", urlPatterns = {"", "/index"})
 public class ServletIndex extends HttpServlet {
-    
+
     private static final int NB_MAX_ANNOUNCEMENT = 10;
-    
+
     private final List<String> categoriesSelected = new ArrayList<>();
-    
+
     @EJB
     private CategoriesManager cm;
 
     @EJB
     private AnnouncementsManager am;
-    
-    /**
-     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
-     * methods.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
-    protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        
-        updateCategoriesSelected(request.getParameter("category"));
-        request.setAttribute("categoriesSelected", categoriesSelected);
-        
-        Collection<Category> categories = cm.getAllCategories();
-        request.setAttribute("categories", categories);
-        
-        Collection<Announcement> announcements = am.searchAnnouncements(0, 
-                NB_MAX_ANNOUNCEMENT, "", "", "", 0, 0, categoriesSelected);
-        request.setAttribute("announcements", announcements);
-        
-        System.out.println("Categories "  + categoriesSelected);
-        
-        RequestDispatcher dp = request.getRequestDispatcher("index.jsp");
-        dp.forward(request, response);
-    }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
@@ -78,7 +45,9 @@ public class ServletIndex extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        updateParametersToSend(request);
+        RequestDispatcher dp = request.getRequestDispatcher("index.jsp");
+        dp.forward(request, response);
     }
 
     /**
@@ -92,7 +61,27 @@ public class ServletIndex extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+
+        if ("updateCategories".equals(request.getParameter("action"))) {
+            updateCategoriesSelected(request.getParameter("category"));
+        }
+        updateParametersToSend(request);
+        response.sendRedirect(request.getContextPath());
+    }
+
+    /**
+     * Update parameters to send for display categories selected and
+     * announcements
+     */
+    private void updateParametersToSend(HttpServletRequest request) {
+        //Categories
+        request.setAttribute("categories", cm.getAllCategories());
+        request.setAttribute("categoriesSelected", categoriesSelected);
+
+        //Announcements
+        Collection<Announcement> announcements = am.searchAnnouncements(0,
+                NB_MAX_ANNOUNCEMENT, "", "", "", 0, 0, categoriesSelected);
+        request.setAttribute("announcements", announcements);
     }
 
     /**
@@ -102,18 +91,22 @@ public class ServletIndex extends HttpServlet {
      */
     @Override
     public String getServletInfo() {
-        return "Short description";
+        return "Return the index page.";
     }// </editor-fold>
-    
-    private void updateCategoriesSelected(String categoryName){
-        if( categoryName == null || categoryName.isEmpty() ){
+
+    /**
+     * Update the list contains all categories selected by user.
+     *
+     * @param categoryName
+     */
+    private void updateCategoriesSelected(String categoryName) {
+        if (categoryName == null || categoryName.isEmpty()) {
             return;
         }
-        
-        if( categoriesSelected.contains(categoryName) ){
+
+        if (categoriesSelected.contains(categoryName)) {
             categoriesSelected.remove(categoryName);
-        }
-        else{
+        } else {
             categoriesSelected.add(categoryName);
         }
     }

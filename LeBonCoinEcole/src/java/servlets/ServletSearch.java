@@ -20,73 +20,28 @@ import manager.AnnouncementsManager;
 import manager.CategoriesManager;
 import manager.SchoolsManager;
 import modele.Announcement;
-import modele.Category;
-import modele.School;
 
-/**
- *
- * @author Seb
- */
 @WebServlet(name = "ServletSearch", urlPatterns = {"/search"})
 public class ServletSearch extends HttpServlet {
-    
+
     private static final int NB_MAX_ANNOUNCEMENT = 10;
-    
+
     private final List<String> categoriesSelected = new ArrayList<>();
     private String school = new String();
     private String codeArea = new String();
     private String key = new String();
     private int minPrice;
     private int maxPrice;
-   
+    private int page;
+
     @EJB
     private CategoriesManager cm;
 
     @EJB
     private AnnouncementsManager am;
-    
+
     @EJB
     private SchoolsManager sm;
-
-    /**
-     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
-     * methods.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
-    protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        
-        updateCategoriesSelected(request.getParameter("category"));
-        request.setAttribute("categoriesSelected", categoriesSelected);
-        
-        updateSearchValue(request);
-        
-        Collection<Category> categories = cm.getAllCategories();
-        request.setAttribute("categories", categories);
-        
-        int page = ( request.getParameter("page") != null )? Integer.parseInt(request.getParameter("page")) : 1;
-        int off = (page-1) * NB_MAX_ANNOUNCEMENT;
-        
-        Collection<Announcement> announcements = am.searchAnnouncements(off, 
-                NB_MAX_ANNOUNCEMENT, key, school, codeArea, minPrice, maxPrice, categoriesSelected);
-        long nbElement = am.countSearchAnnouncements(key, school, codeArea, minPrice, maxPrice, categoriesSelected);
-        int nbPages = (int) nbElement / NB_MAX_ANNOUNCEMENT;
-        if( nbElement % NB_MAX_ANNOUNCEMENT > 0){
-            nbPages++;
-        }
-        request.setAttribute("announcements", announcements);
-        request.setAttribute("nbPages", nbPages);
-        
-        Collection<School> schools = sm.getAllSchools();
-        request.setAttribute("schools", schools);
-        
-        RequestDispatcher dp = request.getRequestDispatcher("search.jsp?page=" + page);
-        dp.forward(request, response);
-    }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
@@ -100,7 +55,11 @@ public class ServletSearch extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+
+        updateSearchValue(request);
+        updateParametersToSend(request);
+        RequestDispatcher dp = request.getRequestDispatcher("search.jsp?page=" + page);
+        dp.forward(request, response);
     }
 
     /**
@@ -114,7 +73,13 @@ public class ServletSearch extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+
+        if ("updateCategories".equals(request.getParameter("action"))) {
+            updateCategoriesSelected(request.getParameter("category"));
+        }
+        updateSearchValue(request);
+        updateParametersToSend(request);
+        response.sendRedirect(request.getContextPath() + "/search?page=" + page);
     }
 
     /**
@@ -124,57 +89,90 @@ public class ServletSearch extends HttpServlet {
      */
     @Override
     public String getServletInfo() {
-        return "Short description";
+        return "Return the search page";
     }// </editor-fold>
-    
-    private void updateCategoriesSelected(String categoryName){
-        if( categoryName == null || categoryName.isEmpty() ){
+
+    /**
+     * Update the list contains all categories selected by user.
+     *
+     * @param categoryName
+     */
+    private void updateCategoriesSelected(String categoryName) {
+        if (categoryName == null || categoryName.isEmpty()) {
             return;
         }
-        
-        if( categoriesSelected.contains(categoryName) ){
+
+        if (categoriesSelected.contains(categoryName)) {
             categoriesSelected.remove(categoryName);
-        }
-        else{
+        } else {
             categoriesSelected.add(categoryName);
         }
     }
-    
-    private void updateSearchValue(HttpServletRequest request){
-        
-        if( request.getParameter("school") != null ){
-            if( request.getParameter("school").equals("Aucune école") ){
-                this.school = "";
-            }
-            else{
-                this.school = request.getParameter("school");
-            }
+
+    /**
+     * Update parameters to send for display categories selected and
+     * announcements
+     */
+    private void updateParametersToSend(HttpServletRequest request) {
+        //Search announcements
+        try {
+            page = Integer.parseInt(request.getParameter("page"));
+        } catch (NumberFormatException e) {
+            page = 1;
         }
-        
-        if( request.getParameter("codeArea") != null ){
+        int off = (page - 1) * NB_MAX_ANNOUNCEMENT;
+        Collection<Announcement> announcements = am.searchAnnouncements(off,
+                NB_MAX_ANNOUNCEMENT, key, school, codeArea, minPrice, maxPrice, categoriesSelected);
+        long nbElement = am.countSearchAnnouncements(key, school, codeArea, minPrice, maxPrice, categoriesSelected);
+
+        //Nb pages
+        int nbPages = (int) nbElement / NB_MAX_ANNOUNCEMENT;
+        if (nbElement % NB_MAX_ANNOUNCEMENT > 0) {
+            nbPages++;
+        }
+
+        //Set parameters
+        request.setAttribute("announcements", announcements);
+        request.setAttribute("nbPages", nbPages);
+        request.setAttribute("categories", cm.getAllCategories());
+        request.setAttribute("categoriesSelected", categoriesSelected);
+        request.setAttribute("schools", sm.getAllSchools());
+    }
+
+    /**
+     * Update form values send by an user.
+     *
+     * @param request
+     */
+    private void updateSearchValue(HttpServletRequest request) {
+        String schoolParam = request.getParameter("school");
+        if (request.getParameter("school") != null) {
+            this.school = (!"Aucune école".equals(schoolParam)) ? schoolParam : "";
+        }
+
+        if (request.getParameter("codeArea") != null) {
             this.codeArea = request.getParameter("codeArea");
         }
-        
-        if( request.getParameter("key") != null ){
+
+        if (request.getParameter("key") != null) {
             this.key = request.getParameter("key");
         }
-        
-        if( request.getParameter("minPrice") != null){
-            try{
+
+        if (request.getParameter("minPrice") != null) {
+            try {
                 this.minPrice = Integer.parseInt(request.getParameter("minPrice"));
-            }catch(NumberFormatException e){
+            } catch (NumberFormatException e) {
                 this.minPrice = 0;
             }
-            
         }
-        
-        if( request.getParameter("maxPrice") != null ){
-           try{
+
+        if (request.getParameter("maxPrice") != null) {
+            try {
                 this.maxPrice = Integer.parseInt(request.getParameter("maxPrice"));
-            }catch(NumberFormatException e){
+            } catch (NumberFormatException e) {
                 this.maxPrice = 0;
             }
         }
     }
-    
+
 }

@@ -24,7 +24,7 @@
                     </a>
                 </c:forEach>
             </c:when>
-            
+
             <c:when test="${empty announcements}">
                 <section class="no-result">
                     <p>
