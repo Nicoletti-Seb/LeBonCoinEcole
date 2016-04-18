@@ -6,7 +6,6 @@
 package servlets;
 
 import java.io.IOException;
-import java.io.PrintWriter;
 import javax.ejb.EJB;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -21,7 +20,7 @@ import modele.Announcement;
  *
  * @author Seb
  */
-@WebServlet(name = "ServletAnnouncement", urlPatterns = {"/annonce"})
+@WebServlet(name = "ServletAnnouncement", urlPatterns = {"/announcement"})
 public class ServletAnnouncement extends HttpServlet {
     
     
@@ -48,7 +47,6 @@ public class ServletAnnouncement extends HttpServlet {
             catch( NumberFormatException e){
                 announcement = null;
             }
-            
             
             if( announcement == null ){
                 request.setAttribute("error", true);

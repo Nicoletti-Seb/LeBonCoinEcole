@@ -256,6 +256,51 @@ input[type=checkbox]:checked + label{
     margin: 0px;
 }
 
+.contact-container{
+    display: inline-block;
+    width: 250px;
+    background-color: #ffab62;
+    color: white;
+    border-radius: 5px;
+    margin-top: 20px;
+    padding: 5px 10px;
+    vertical-align: top;
+    font-size: 15px;
+}
+
+.contact-container h1{
+    text-align: center;
+    font-size: 25px;
+    margin: 0px;
+}
+
+.contact-container h2{
+    font-size: 20px;
+    margin: 0px;
+}
+
+.contact-container a{
+    font-size: 20px;
+    text-decoration: none;
+}
+
+.announcement-container{
+    display: inline-block;
+    width: 100%;
+    max-width: 800px;
+    margin: 20px;
+    background-color: #fbfbfb;
+    padding: 50px;
+    border-radius: 10px;
+}
+
+.announcement-container img{
+    display: block;
+    width: 100px;
+    height: 100px;
+    margin: 8px auto;
+}
+
 /* Formulaire création de compte */
 #compte-form .multiblock input {
     margin: 0px 10px 10px 0px;
@@ -351,12 +396,30 @@ a.clickable{
     }
 }
 
+@media screen and (max-width: 1220px) {
+    .contact-container{
+        display: block;
+        width: 100%;
+        max-width: 800px;
+        height: auto;
+        margin: 5px auto;
+        padding: 0px;
+    }
+    
+    .announcement-container{
+        display: block;
+        margin: 20px auto;
+        padding: 0px;
+    }
+}
+
 @media screen and (max-width: 900px) {
     header .container-title form{
         position: static;
         display: inline-block;
     }
 }
+
 
 /* Components */
 .button {
