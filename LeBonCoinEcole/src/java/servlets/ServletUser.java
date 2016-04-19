@@ -19,7 +19,6 @@ import manager.UsersManager;
 import modele.Administrator;
 import modele.Student;
 
-
 /**
  *
  * @author Seb
