@@ -24,14 +24,13 @@ public class SchoolsManager {
     private EntityManager em;
 
     public void createSchoolsTest() {
-        createSchool("A", new Address(10, "rue de la boustifaille", "06600", "Nice", "France"), "www.google.fr");
-        createSchool("C", new Address(), "c");
-        createSchool("D", new Address(), "d");
-        createSchool("E", new Address(), "e");
+        createSchool("Ecole nationale supérieure de la nature et du paysage", new Address(9, "rue de la Chocolaterie", "41029", "Blois", "France"), "http://www.onisep.fr/http/redirection/etablissement/identifiant/193");
+        createSchool("IXAD Ecole des Avocats Nord-Ouest", new Address(1, "place Déliot", "59024", "Lille", "France"), "http://www.onisep.fr/http/redirection/etablissement/identifiant/295");
+        createSchool("Institut national des techniques économiques et comptables", new Address(8, "boulevard Louis XIV", "59024", "Lille", "France"), "http://www.onisep.fr/http/redirection/etablissement/identifiant/603");
+        createSchool("Médiaquitaine - Centre régional de formation aux carrières des bibliothèques", new Address(10, "A avenue d'Aquitaine", "33172", "Gradignan", "France"), "http://www.onisep.fr/http/redirection/etablissement/identifiant/1267");
     }
 
     public School createSchool(String name, Address address, String link) {
-        em.persist(address);
         School s = new School(name, address, link);
         em.merge(s);
         return s;
