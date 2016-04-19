@@ -257,11 +257,11 @@ input[type=checkbox]:checked + label{
 }
 
 /* Formulaire création de compte */
-#compte-form .multibock input {
+#compte-form .multiblock input {
     margin: 0px 10px 10px 0px;
 }
 
-#compte-form .multibock {
+#compte-form .multiblock {
     margin: 10px 0px;
     display: block;
 }

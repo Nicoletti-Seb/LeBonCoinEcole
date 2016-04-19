@@ -6,7 +6,6 @@
 package modele;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
@@ -40,9 +39,6 @@ public class Student implements Serializable {
     private School school;
 
     @OneToMany(cascade = {CascadeType.REMOVE}, orphanRemoval = true)
-    private List<Address> address;
-
-    @OneToMany(cascade = {CascadeType.REMOVE}, orphanRemoval = true)
     private List<PhoneNumber> phoneNumbers;
 
     @OneToMany(cascade = {CascadeType.REMOVE}, orphanRemoval = true)
@@ -73,18 +69,17 @@ public class Student implements Serializable {
     }
 
     public Student(String lastname, String firstname, String username, String password,
-            School school, List<Address> address, List<PhoneNumber> phoneNumbers,
+            School school, List<PhoneNumber> phoneNumbers,
             List<Email> emails, byte[] image) {
         this.lastname = lastname;
         this.firstname = firstname;
         this.username = username;
         this.password = password;
         this.school = school;
-        this.address = address;
         this.phoneNumbers = phoneNumbers;
         this.emails = emails;
         this.image = image;
-        this.announcements = new ArrayList<Announcement>();
+        //this.announcements = new ArrayList<Announcement>();
     }
 
     public int getId() {
@@ -133,14 +128,6 @@ public class Student implements Serializable {
 
     public void setSchool(School school) {
         this.school = school;
-    }
-
-    public List<Address> getAddress() {
-        return address;
-    }
-
-    public void setAddress(List<Address> address) {
-        this.address = address;
     }
 
     public List<PhoneNumber> getPhoneNumbers() {

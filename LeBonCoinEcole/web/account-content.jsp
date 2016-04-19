@@ -5,14 +5,14 @@
 <c:if test="${requestScope['action'] == 'formCreationComtpe'}"> 
 
     <section class="container-form" >
-        <form id="compte-form" method="POST" action="MonCompte">
+        <form id="compte-form" method="POST" action="account">
             <h1>Création de compte</h1>
             
-            <h2>Nom</h2>
-            <input type="text" name="lastname" placeholder="Nom"/>
+            <h2>Nom *</h2>
+            <input type="text" name="lastname" placeholder="Nom" required=""/>
             
-            <h2>Prénom</h2>
-            <input type="text" name="firstname" placeholder="Prénom"/>
+            <h2>Prénom *</h2>
+            <input type="text" name="firstname" placeholder="Prénom" required=""/>
             
             <h2>Login *</h2>
             <input type="text" name="username" placeholder="Login" required=""/>
@@ -20,15 +20,6 @@
             <h2>Mot de passe *</h2>
             <input type="password" name="password" placeholder="Mot de passe" required=""/>
 
-            <h2>Votre adresse</h2>
-            <div class="multibock">
-                <input class="largeur-60" type="number" name="addr-number" min="0" placeholder="num"/>
-                <input class="largeur-300" type="text" name="addr-name" placeholder="rue"/><br>
-                <input class="largeur-100" type="number" name="addr-areaCode" min="1" placeholder="Code postal"/>
-                <input class="largeur-100" type="text" name="addr-city" placeholder="Ville"/>
-                <input class="largeur-100" type="text" name="addr-country" placeholder="Pays"/>
-            </div>
-            
             <h2>Votre école *</h2>
             <select name="school" required="">
                 <option value=""></option>
@@ -40,8 +31,8 @@
             <h2>Téléphone</h2>
             <input type="tel" name="phone" placeholder="téléphone"/>
             
-            <h2>Adresse email</h2>
-            <input type="email" name="email" placeholder="Adresse email"/>
+            <h2>Adresse email *</h2>
+            <input type="email" name="email" placeholder="Adresse email" required=""/>
     
             <h2>Image</h2>
             <input type="file"/>
@@ -56,7 +47,7 @@
 <c:if test="${requestScope['action'] == 'displayInfoCompte'}"> 
 
     <section class="container-form" id="displayCompte">
-        <form method="GET" action="MonCompte">
+        <form method="GET" action="account">
             <h1>Mes informations</h1>
 
             <c:set var="s" value="${requestScope['student']}"/> 
@@ -71,14 +62,7 @@
             <h2>Login</h2>
             ${s.username}
 
-            <h2>Mes adresses</h2>
-            <ul>
-                <c:forEach var="addr" items="${s.address}">
-                    <li>${addr}</li>
-                </c:forEach>
-            </ul>
-
-            <h2>Mon école</h2>
+            <h2>Votre école</h2>
             <a href="http://${s.school.link}" target="_blank">${s.school.name}</a><br>
             ${s.school.address.toString()}
 
@@ -89,7 +73,7 @@
                 </c:forEach>
             </ul>
 
-            <h2>Email</h2>
+            <h2>Adresse email</h2>
             <ul>
                 <c:forEach var="email" items="${s.emails}">
                     <li>${email}</li>
@@ -106,42 +90,23 @@
 <c:if test="${requestScope['action'] == 'formModifierComtpe'}"> 
 
     <section class="container-form" id="displayCompte">
-        <form id="compte-form" method="POST" action="MonCompte">
+        <form id="compte-form" method="POST" action="account">
             <h1>Modifier mes informations</h1>
             
             <c:set var="s" value="${requestScope['student']}"/>
             <img src="//static.leboncoin.fr/img/no-picture.png"/>
             
-            <h2>Nom</h2>
-            <input type="text" name="lastname" value="${s.lastname}" placeholder="Nom"/>
+            <h2>Nom *</h2>
+            <input type="text" name="lastname" value="${s.lastname}" placeholder="Nom" required=""/>
             
-            <h2>Prénom</h2>
-            <input type="text" name="firstname" value="${s.firstname}" placeholder="Prénom"/>
+            <h2>Prénom *</h2>
+            <input type="text" name="firstname" value="${s.firstname}" placeholder="Prénom" required=""/>
             
             <h2>Login</h2>
             ${s.username}
             
             <h2>Mot de passe *</h2>
-            <input type="password" name="password" placeholder="Mot de passe"/>
-
-            <h2>Mes adresse</h2>
-            <c:forEach var="addr" items="${s.address}">            
-                <div class="multibock">
-                    <input class="largeur-60" type="number" name="addr-number" min="0" value="${addr.number}" placeholder="Num"/>
-                    <input class="largeur-300" type="text" name="addr-name" value="${addr.name}" placeholder="Rue"/><br>
-                    <input class="largeur-60" type="number" name="addr-areaCode" min="1" value="${addr.areaCode}"placeholder="Code postal"/>
-                    <input class="largeur-100" type="text" name="addr-city" value="${addr.city}" placeholder="Ville"/>
-                    <input class="largeur-100" type="text" name="addr-country" value="${addr.country}" placeholder="Pays"/>
-                </div>
-            </c:forEach>
-            
-            <div class="multibock">
-                <input class="largeur-60" type="number" name="addr-number" min="0" placeholder="Num"/>
-                <input class="largeur-300" type="text" name="addr-name" placeholder="Rue"/><br>
-                <input class="largeur-100" type="number" name="addr-areaCode" min="1" placeholder="Code postal"/>
-                <input class="largeur-100" type="text" name="addr-city" placeholder="Ville"/>
-                <input class="largeur-100" type="text" name="addr-country" placeholder="Pays"/>
-            </div>
+            <input type="password" name="password" value="${s.password}"placeholder="Mot de passe" required=""/>
             
             <h2>Votre école *</h2>
             <select name="school" required="">
@@ -164,23 +129,22 @@
 
             <h2>Téléphone</h2>
             <c:forEach var="phone" items="${s.phoneNumbers}">
-                <div class="multibock">
+                <div class="multiblock">
                     <input type="tel" name="phone" value="${phone}" placeholder="Téléphone"/>
                 </div>
             </c:forEach>
-                <div class="multibock">
+                <div class="multiblock">
                     <input type="tel" name="phone" placeholder="Téléphone"/>
                </div>
             
-            <h2>Adresse email</h2>
-            <c:forEach var="email" items="${s.emails}">
-                <div class="multibock">
-                    <input type="email" name="email" value="${email}" placeholder="Adresse email"/>
-                </div>
-            </c:forEach>
-                <div class="multibock">
-                    <input type="email" name="email" placeholder="Adresse email"/>
-                </div>
+            <h2>Adresse email *</h2>
+            <div class="multiblock">
+                <input type="email" name="email" value="${s.emails[0]}" placeholder="Adresse email" required=""/>
+            </div>
+            <!-- Faire un truc pour recuperer tous les emails (avec le 1er en require -->
+            <div class="multiblock">
+                <input type="email" name="email" placeholder="Adresse email"/>
+            </div>
             
             <h2>Image</h2>
             <input type="file"/>

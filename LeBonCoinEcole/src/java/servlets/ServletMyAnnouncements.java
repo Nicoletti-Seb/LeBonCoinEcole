@@ -21,7 +21,7 @@ import modele.Student;
  *
  * @author LeoPaul
  */
-@WebServlet(name = "ServletMyAnnouncements", urlPatterns = {"/MyAnnouncements"})
+@WebServlet(name = "ServletMyAnnouncements", urlPatterns = {"/myAnnouncements"})
 public class ServletMyAnnouncements extends HttpServlet {
     
     @Override
@@ -34,7 +34,7 @@ public class ServletMyAnnouncements extends HttpServlet {
             
             List<Announcement> announcements = student.getAnnouncements();
             request.setAttribute("toto", student);
-            request.setAttribute("announcements", announcements);
+            //request.setAttribute("announcements", announcements);
         }
         
         RequestDispatcher dp = request.getRequestDispatcher("myAnnouncements.jsp");

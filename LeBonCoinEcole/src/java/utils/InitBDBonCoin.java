@@ -11,15 +11,16 @@ import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.ejb.Singleton;
 import javax.ejb.Startup;
+import manager.AdminManager;
 import manager.AnnouncementsManager;
 import manager.CategoriesManager;
 import manager.SchoolsManager;
 import manager.UsersManager;
 import modele.Address;
-import modele.Announcement;
 import modele.Email;
 import modele.PhoneNumber;
-//import manager.StudentManager;
+import modele.School;
+import modele.Student;
 
 /**
  * Pour initialiser la base de données au déploiement
@@ -36,6 +37,9 @@ public class InitBDBonCoin {
 
     @EJB
     UsersManager um;
+    
+    @EJB
+    AdminManager adm;
     
     @EJB
     CategoriesManager cm;
@@ -57,16 +61,10 @@ public class InitBDBonCoin {
         um.createStudentsTest(5);
         System.out.println("Initialisation de la base de donnée : Students");
         
+        adm.createAdministratorTest();
+        
         am.createAnnouncementsTest();
         System.out.println("Initialisation de la base de donnée : Annoucements");
-        
-        Address addr1 = new Address(1, "rue 1", "00001", "Nice", "France");
-        Address addr2 = new Address(2, "rue 2", "00002", "Nice", "France");
-        Address addr3 = new Address(3, "rue 3", "00003", "Nice", "France");
-        List<Address> listAddress = new ArrayList<Address>();
-        listAddress.add(addr1);
-        listAddress.add(addr2);
-        listAddress.add(addr3);
         
         PhoneNumber phone1 = new PhoneNumber("123456789");
         PhoneNumber phone2 = new PhoneNumber("987654321");
@@ -80,6 +78,8 @@ public class InitBDBonCoin {
         listEmails.add(email1);
         listEmails.add(email2);
         
-        um.createStudent("nom", "prenom", "username", "pass", null, listAddress, listPhones, listEmails, null);
+        School school = sm.createSchool("B", new Address(30, "rue de la boustifaille", "06600", "Nice", "France"), "www.google.fr");
+        
+        Student student = um.createStudent("nom", "prenom", "username", "pass", null, listPhones, listEmails, null);
     }
 }

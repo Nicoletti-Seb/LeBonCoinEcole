@@ -12,7 +12,6 @@ import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
-import modele.Address;
 import modele.Email;
 import modele.PhoneNumber;
 import modele.School;
@@ -31,7 +30,7 @@ public class UsersManager {
     @PersistenceContext
     private EntityManager em;
 
-    private static final int NB_USER = 10;
+    private static final int NB_USER = 20;
 
     public void createStudentsTest() {
         createStudent("John", "Lennon", "jlennon");
@@ -59,12 +58,8 @@ public class UsersManager {
     }
 
     public Student createStudent(String lastname, String firstname, String username, String password,
-            School school, List<Address> address, List<PhoneNumber> phoneNumbers,
+            School school, List<PhoneNumber> phoneNumbers,
             List<Email> emails, byte[] image) {
-
-        for (Address addr : address) {
-            em.persist(addr);
-        }
 
         for (PhoneNumber phone : phoneNumbers) {
             em.persist(phone);
@@ -74,7 +69,7 @@ public class UsersManager {
             em.persist(email);
         }
 
-        Student u = new Student(lastname, firstname, username, password, school, address,
+        Student u = new Student(lastname, firstname, username, password, school,
                 phoneNumbers, emails, image);
         em.persist(u);
         return u;
@@ -115,7 +110,7 @@ public class UsersManager {
     }
 
     public Student updateStudent(String lastname, String firstname, String username, String password,
-            School school, List<Address> address, List<PhoneNumber> phoneNumbers,
+            School school, List<PhoneNumber> phoneNumbers,
             List<Email> emails, byte[] image) {
         Student s = lookingByUsername(username);
         if (s == null) {
@@ -133,13 +128,6 @@ public class UsersManager {
         
         if (school != null) {
             s.setSchool(school);
-        }
-        
-        if (address != null) {
-            for (Address addr : address) {
-                em.persist(addr);
-            }
-            s.setAddress(address);
         }
 
         if (phoneNumbers != null) {
