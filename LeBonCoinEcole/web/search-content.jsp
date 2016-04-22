@@ -60,7 +60,7 @@
 
                     <c:forEach var="a" items="${announcements}">
                         <a href="announcement?id=${a.id}" class="item clickable" >
-                            <img src="//static.leboncoin.fr/img/no-picture.png" /> 
+                            <img src="${a.url}" /> 
                             <div class="description">
                                 <h2 class="title"> ${a.title} </h2>
                                 <p class="desc">${a.description}</p>

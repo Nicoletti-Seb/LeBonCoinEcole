@@ -2,7 +2,6 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix ="fmt" %>
 
 <section class="container-form">
-<<<<<<< HEAD
     <header>
         <c:if test="${param.success}">
             <div class="success">
@@ -16,10 +15,7 @@
             </div>
         </c:if>
     </header>
-=======
->>>>>>> 48adb36... jsp: Séparation des actions GET et POST + clean
-    <form id="form-AddAnnouncement" action="" method="POST">
-
+    <form id="form-AddAnnouncement" action="" method="POST"  enctype="multipart/form-data">
         <h1>Deposer une annonce</h1>
 
         <h2>Categories</h2>

@@ -51,7 +51,7 @@
             <h1>Mes informations</h1>
 
             <c:set var="s" value="${requestScope['student']}"/> 
-            <img src="//static.leboncoin.fr/img/no-picture.png"/>
+            <img src="${s.url}"/>
             
             <h2>Nom</h2>
             ${s.lastname}

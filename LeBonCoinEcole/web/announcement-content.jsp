@@ -15,7 +15,7 @@
             <c:set var="school" value="${student.school}"/>
 
             <article class="announcement-container">
-                <img src="//static.leboncoin.fr/img/no-picture.png" /> 
+                <img src="${announcement.url}" /> 
                 <header class="categories">
                     <c:forEach var="c" items="${announcement.categories}">
                         <div  class="category">

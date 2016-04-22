@@ -6,6 +6,7 @@
 package modele;
 
 import java.io.Serializable;
+import java.util.Base64;
 import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
@@ -160,6 +161,14 @@ public class Student implements Serializable {
 
     public void setAnnouncements(List<Announcement> announcements) {
         this.announcements = announcements;
+    }
+    
+    public String getUrl(){
+        if( image == null ){
+            return "//static.leboncoin.fr/img/no-picture.png";
+        }
+        
+        return "data:image/png;base64," + Base64.getEncoder().encodeToString(image);
     }
 
     @Override

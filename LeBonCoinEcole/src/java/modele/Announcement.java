@@ -7,6 +7,7 @@ package modele;
 
 import java.io.Serializable;
 import java.sql.Date;
+import java.util.Base64;
 import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
@@ -143,6 +144,14 @@ public class Announcement implements Serializable {
 
     public void setId(int id) {
         this.id = id;
+    }
+    
+    public String getUrl(){
+        if( image == null ){
+            return "//static.leboncoin.fr/img/no-picture.png";
+        }
+        
+        return "data:image/png;base64," + Base64.getEncoder().encodeToString(image);
     }
 
     @Override

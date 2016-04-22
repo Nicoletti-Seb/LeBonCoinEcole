@@ -5,17 +5,27 @@
  */
 package servlets;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.InputMismatchException;
 import java.util.List;
+import java.util.Scanner;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.ejb.EJB;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
+import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.servlet.http.Part;
 import manager.AnnouncementsManager;
 import manager.CategoriesManager;
 import modele.Category;
@@ -23,6 +33,7 @@ import modele.Student;
 import utils.FormAddAnnouncementBean;
 
 @WebServlet(name = "ServletAddAnnouncement", urlPatterns = {"/addAnnouncement"})
+@MultipartConfig
 public class ServletAddAnnouncement extends HttpServlet {
 
     @EJB
@@ -67,8 +78,14 @@ public class ServletAddAnnouncement extends HttpServlet {
             throws ServletException, IOException {
 
         StringBuilder params = new StringBuilder();
+        String action = "";
         
-        if ("create".equals(request.getParameter("action"))) {
+        if( request.getPart("action") != null ){
+            Scanner scanf = new Scanner(request.getPart("action").getInputStream());
+            action = scanf.nextLine();
+        }
+        
+        if ("create".equals(action)) {
             HttpSession session = request.getSession();
             FormAddAnnouncementBean faab = (FormAddAnnouncementBean) session.getAttribute("formAddAnnouncementBean");
             Student student = (Student) session.getAttribute("student");
@@ -105,34 +122,50 @@ public class ServletAddAnnouncement extends HttpServlet {
      *
      * @param request
      */
-    private void updateFormValue(HttpServletRequest request) {
+    private void updateFormValue(HttpServletRequest request) throws ServletException, IOException {
         HttpSession session = request.getSession();
         FormAddAnnouncementBean faab = (FormAddAnnouncementBean) session.getAttribute("formAddAnnouncementBean");
+        Scanner scanf;
 
-        faab.setTitle(request.getParameter("title"));
-        faab.setDescription(request.getParameter("description"));
+        scanf = new Scanner(request.getPart("title").getInputStream());
+        faab.setTitle(scanf.nextLine());
+        
+        scanf = new Scanner(request.getPart("description").getInputStream());
+        faab.setDescription(scanf.nextLine());
 
-        if (request.getParameter("price") != null) {
-            try {
-                faab.setPrice(Float.parseFloat(request.getParameter("price")));
-            } catch (NumberFormatException e) {
-                faab.setPrice(0f);
-            }
+        scanf = new Scanner(request.getPart("price").getInputStream());
+        try {
+            faab.setPrice(scanf.nextFloat());
+        } catch (InputMismatchException e) {
+            faab.setPrice(0f);
         }
-
-        if (request.getParameterValues("categories") != null) {
+        
+        if (request.getPart("categories") != null) {
             List<Category> categories = new ArrayList<>();
+            scanf = new Scanner(request.getPart("categories").getInputStream());
 
-            for (String name : request.getParameterValues("categories")) {
-                categories.add(cm.getCategory(name));
+            while( scanf.hasNextLine() ){
+                categories.add(cm.getCategory(scanf.nextLine()));
             }
             faab.setCategories(categories);
         } else {
             faab.setCategories(null);
         }
 
-        if (request.getParameter("image") != null) {
-            //TODO
+        if (request.getPart("image") != null) {
+            faab.setImage(readImage(request.getPart("image").getInputStream()));
         }
+    }
+    
+    private byte[] readImage(InputStream is) throws IOException{
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        byte[] buff = new byte[1024];
+        
+        while( is.available() > 0 ){
+            int nb = is.read(buff);
+            baos.write(buff, 0, nb);
+        }
+        
+        return baos.toByteArray();
     }
 }
