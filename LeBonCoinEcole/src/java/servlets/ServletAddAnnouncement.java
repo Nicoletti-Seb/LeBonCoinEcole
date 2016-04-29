@@ -5,17 +5,8 @@
  */
 package servlets;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.InputMismatchException;
-import java.util.List;
 import java.util.Scanner;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.ejb.EJB;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -25,12 +16,11 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import javax.servlet.http.Part;
 import manager.AnnouncementsManager;
 import manager.CategoriesManager;
-import modele.Category;
 import modele.Student;
 import utils.FormAddAnnouncementBean;
+import utils.ReaderParts;
 
 @WebServlet(name = "ServletAddAnnouncement", urlPatterns = {"/addAnnouncement"})
 @MultipartConfig
@@ -125,47 +115,11 @@ public class ServletAddAnnouncement extends HttpServlet {
     private void updateFormValue(HttpServletRequest request) throws ServletException, IOException {
         HttpSession session = request.getSession();
         FormAddAnnouncementBean faab = (FormAddAnnouncementBean) session.getAttribute("formAddAnnouncementBean");
-        Scanner scanf;
 
-        scanf = new Scanner(request.getPart("title").getInputStream());
-        faab.setTitle(scanf.nextLine());
-        
-        scanf = new Scanner(request.getPart("description").getInputStream());
-        faab.setDescription(scanf.nextLine());
-
-        scanf = new Scanner(request.getPart("price").getInputStream());
-        try {
-            faab.setPrice(scanf.nextFloat());
-        } catch (InputMismatchException e) {
-            faab.setPrice(0f);
-        }
-        
-        if (request.getPart("categories") != null) {
-            List<Category> categories = new ArrayList<>();
-            scanf = new Scanner(request.getPart("categories").getInputStream());
-
-            while( scanf.hasNextLine() ){
-                categories.add(cm.getCategory(scanf.nextLine()));
-            }
-            faab.setCategories(categories);
-        } else {
-            faab.setCategories(null);
-        }
-
-        if (request.getPart("image") != null) {
-            faab.setImage(readImage(request.getPart("image").getInputStream()));
-        }
-    }
-    
-    private byte[] readImage(InputStream is) throws IOException{
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        byte[] buff = new byte[1024];
-        
-        while( is.available() > 0 ){
-            int nb = is.read(buff);
-            baos.write(buff, 0, nb);
-        }
-        
-        return baos.toByteArray();
+        faab.setTitle(ReaderParts.readString(request.getPart("title")));
+        faab.setDescription(ReaderParts.readString(request.getPart("description")));
+        faab.setPrice(ReaderParts.readNumbers(request.getPart("price")));
+        faab.setCategories(ReaderParts.readCategories(request.getPart("categories")));
+        faab.setImage(ReaderParts.readByteArray(request.getPart("image")));
     }
 }

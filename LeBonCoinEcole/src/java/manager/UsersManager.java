@@ -144,6 +144,9 @@ public class UsersManager {
             s.setEmails(emails);
         }
 
+        if( image != null ){
+            s.setImage(image);
+        }
         return s;
     }
 

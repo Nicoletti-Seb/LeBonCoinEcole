@@ -164,7 +164,7 @@ public class Student implements Serializable {
     }
     
     public String getUrl(){
-        if( image == null ){
+        if( image == null || image.length == 0){
             return "//static.leboncoin.fr/img/no-picture.png";
         }
         

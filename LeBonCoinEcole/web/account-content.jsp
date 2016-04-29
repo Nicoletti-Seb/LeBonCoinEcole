@@ -5,7 +5,7 @@
 <c:if test="${requestScope['action'] == 'formCreationComtpe'}"> 
 
     <section class="container-form" >
-        <form id="compte-form" method="POST" action="account">
+        <form id="compte-form" method="POST" action="account" enctype="multipart/form-data">
             <h1>Création de compte</h1>
             
             <h2>Nom *</h2>
@@ -35,7 +35,7 @@
             <input type="email" name="email" placeholder="Adresse email" required=""/>
     
             <h2>Image</h2>
-            <input type="file"/>
+            <input name="image" type="file"/>
             
             <input type="hidden" name="action" value="create"/>
             <button type="submit" class="button">Valider</button>
@@ -90,11 +90,11 @@
 <c:if test="${requestScope['action'] == 'formModifierComtpe'}"> 
 
     <section class="container-form" id="displayCompte">
-        <form id="compte-form" method="POST" action="account">
+        <form id="compte-form" method="POST" action="account" enctype="multipart/form-data" >
             <h1>Modifier mes informations</h1>
             
             <c:set var="s" value="${requestScope['student']}"/>
-            <img src="//static.leboncoin.fr/img/no-picture.png"/>
+            <img src="${s.url}"/>
             
             <h2>Nom *</h2>
             <input type="text" name="lastname" value="${s.lastname}" placeholder="Nom" required=""/>
@@ -147,7 +147,7 @@
             </div>
             
             <h2>Image</h2>
-            <input type="file"/>
+            <input name="image" type="file"/>
             
             <input type="hidden" name="action" value="update"/>
             <button type="submit" class="button">Valider</button>
