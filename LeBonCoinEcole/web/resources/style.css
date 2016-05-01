@@ -366,6 +366,7 @@ a.clickable{
 .paginations .selected, .paginations .page:hover{
     background-color: #ffab62;
     color: white;
+    cursor: pointer;
 }
 
 /* Resize */

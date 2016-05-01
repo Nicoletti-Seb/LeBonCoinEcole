@@ -10,6 +10,7 @@ public class SearchFormBean {
     private int page;
 
     public SearchFormBean() {
+        page = 1;
         school = new String();
         areaCode = new String();
         key = new String();

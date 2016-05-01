@@ -6,9 +6,14 @@
 package servlets;
 
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.ejb.EJB;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -49,6 +54,7 @@ public class ServletSearch extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        
         HttpSession session = request.getSession();
 
         if (session.getAttribute("categoriesSelected") == null) {
@@ -59,7 +65,10 @@ public class ServletSearch extends HttpServlet {
             session.setAttribute("searchFormBean", new SearchFormBean());
         }
 
-        updateSearchValue(request);
+        if( ! "true".equals(request.getParameter("updateCategories")) ){
+            updateSearchValue(request);
+        }
+        
         updateParametersToSend(request);
         SearchFormBean searchFormBean = (SearchFormBean) session.getAttribute("searchFormBean");
         RequestDispatcher dp = request.getRequestDispatcher("search.jsp?page=" + searchFormBean.getPage());
@@ -77,14 +86,14 @@ public class ServletSearch extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        
         HttpSession session = request.getSession();
 
         if ("updateCategories".equals(request.getParameter("action"))) {
             updateCategoriesSelected(session, request.getParameter("category"));
         }
-        
-        SearchFormBean searchFormBean = (SearchFormBean) session.getAttribute("searchFormBean");
-        response.sendRedirect(request.getContextPath() + "/search?page=" + searchFormBean.getPage());
+
+        response.sendRedirect(response.encodeRedirectURL("search?updateCategories=true"));
     }
 
     /**
@@ -125,11 +134,6 @@ public class ServletSearch extends HttpServlet {
         SearchFormBean sfb = (SearchFormBean) session.getAttribute("searchFormBean");
 
         //Search announcements
-        try {
-            sfb.setPage(Integer.parseInt(request.getParameter("page")));
-        } catch (NumberFormatException e) {
-            sfb.setPage(1);
-        }
         int off = (sfb.getPage() - 1) * NB_MAX_ANNOUNCEMENT;
 
         Collection<Announcement> announcements = am.searchAnnouncements(off,
@@ -150,6 +154,7 @@ public class ServletSearch extends HttpServlet {
         request.setAttribute("categories", cm.getAllCategories());
         request.setAttribute("categoriesSelected", categoriesSelected);
         request.setAttribute("schools", sm.getAllSchools());
+        request.setAttribute("pv", sfb);
     }
 
     /**
@@ -161,24 +166,30 @@ public class ServletSearch extends HttpServlet {
         HttpSession session = request.getSession();
         SearchFormBean sfb = (SearchFormBean) session.getAttribute("searchFormBean");
         sfb.setSchool(request.getParameter("school"));
-        sfb.setAreaCode(request.getParameter("codeArea"));
+        sfb.setAreaCode(request.getParameter("areaCode"));
         sfb.setKey(request.getParameter("key"));
 
-        if (request.getParameter("minPrice") != null) {
-            try {
-                sfb.setMinPrice(Integer.parseInt(request.getParameter("minPrice")));
-            } catch (NumberFormatException e) {
-                sfb.setMinPrice(0);
-            }
+        try {
+            sfb.setMinPrice(Integer.parseInt(request.getParameter("minPrice")));
+        } catch (NumberFormatException e) {
+            sfb.setMinPrice(0);
         }
 
-        if (request.getParameter("maxPrice") != null) {
-            try {
-                sfb.setMaxPrice(Integer.parseInt(request.getParameter("maxPrice")));
-            } catch (NumberFormatException e) {
-                sfb.setMaxPrice(0);
-            }
+        try {
+            sfb.setMaxPrice(Integer.parseInt(request.getParameter("maxPrice")));
+        } catch (NumberFormatException e) {
+            sfb.setMaxPrice(0);
         }
+        
+        try {
+            sfb.setPage(Integer.parseInt(request.getParameter("page")));
+        } catch (NumberFormatException e) {
+            sfb.setPage(1);
+        }
+    }
+
+    private void URI(String string) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
 }

@@ -101,7 +101,7 @@ public class AnnouncementsManager {
              if( ! where.toString().isEmpty() ){
                 where.append(" and ");
             }
-            where.append(" a.student.school.address.codeArea = '").append(areaCode).append("'");;
+            where.append(" a.student.school.address.areaCode like '").append(areaCode).append("%'");;
         }
         
         //CATEGORIES
