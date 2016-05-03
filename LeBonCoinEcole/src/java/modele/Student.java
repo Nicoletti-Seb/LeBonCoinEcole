@@ -154,6 +154,15 @@ public class Student implements Serializable {
     public void setImage(byte[] image) {
         this.image = image;
     }
+    
+    public List<Announcement> getAnnouncements(int off, int nb) {
+        int end  = off + nb;
+        if( end > announcements.size() ){
+            end = announcements.size();
+        }
+        
+        return announcements.subList(off, end);
+    }
 
     public List<Announcement> getAnnouncements() {
         return announcements;

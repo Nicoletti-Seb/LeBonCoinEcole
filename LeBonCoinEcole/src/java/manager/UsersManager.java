@@ -175,6 +175,16 @@ public class UsersManager {
         s.setSchool(school);
         return s;
     }
+    
+    public Student synchronised(Student student){
+        Student studentUpdate = em.merge(student);
+        em.refresh(studentUpdate);
+        return studentUpdate;
+    }
+    
+    public void sendToDB(){
+        em.flush();
+    }
 
 //    public int addSchool(int idSchool, int idStudent) {
 //        Query q = em.createQuery("update student set school_id="+idSchool
