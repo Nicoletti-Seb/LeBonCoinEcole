@@ -43,6 +43,11 @@ public class FormAddAnnouncementBean {
 
     public void setDescription(String description) {
         this.description = ( description != null )? description : "";
+        
+        // Remove balise html
+        //Lien des encodage des caractére html http://www.w3schools.com/HTML/html_entities.asp
+        this.description = this.description.replaceAll(">", "&gt;");
+        this.description = this.description.replaceAll("<", "&lt;");
     }
 
     public float getPrice() {
