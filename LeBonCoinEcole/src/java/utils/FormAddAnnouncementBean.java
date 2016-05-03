@@ -26,7 +26,7 @@ public class FormAddAnnouncementBean {
     }
 
     public void setCategories(List<Category> categories) {
-        this.categories = ( categories != null )? categories : new ArrayList<>();
+        this.categories = ( categories != null )? categories : new ArrayList<Category>();
     }
 
     public String getTitle() {

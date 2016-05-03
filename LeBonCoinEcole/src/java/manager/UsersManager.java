@@ -30,8 +30,6 @@ public class UsersManager {
     @PersistenceContext
     private EntityManager em;
 
-    private static final int NB_USER = 20;
-
     public void createStudentsTest() {
         createStudent("John", "Lennon", "jlennon");
         createStudent("Paul", "Mac Cartney", "pmc");
@@ -72,6 +70,7 @@ public class UsersManager {
         Student u = new Student(lastname, firstname, username, password, school,
                 phoneNumbers, emails, image);
         em.persist(u);
+        em.flush();
         return u;
     }
 
@@ -87,15 +86,20 @@ public class UsersManager {
     }
 
     // selection de X(10) utilisateur depuis le numéro Y(OFF)
-    public Collection<Student> getAllStudents(int off) {
+    public Collection<Student> getAllStudents(int off, int count) {
         if (off < 0) {
             off = 0;
         }
         // Exécution d'une requête équivalente à un select *  
         Query q = em.createQuery("select s from Student s");
-        q.setMaxResults(NB_USER);
+        q.setMaxResults(count);
         q.setFirstResult(off);
         return q.getResultList();
+    }
+    
+    public long countStudents() {
+        Query q = em.createQuery("select count(s) from Student s");
+        return (long) q.getSingleResult();
     }
 
     public Student lookingByUsername(String username) {

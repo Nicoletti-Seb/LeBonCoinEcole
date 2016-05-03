@@ -50,7 +50,8 @@ public class ServletAdminCategory extends HttpServlet {
             throws ServletException, IOException {
 
         String action = request.getParameter("action");
-
+        String forwardTo = "";
+        
         if ("create".equals(action)) {
             String name = request.getParameter("name");
 
@@ -58,14 +59,23 @@ public class ServletAdminCategory extends HttpServlet {
 
             if (category == null) {
                 cm.createCategory(name);
+                
+                forwardTo = "?action=create&success=true&name="+name;
+            } else {
+                forwardTo = "?action=create&error=true&name="+name;
             }
         } else if ("delete".equals(action)) {
             String name = request.getParameter("name");
 
-            cm.deleteCategory(name);
+            int res = cm.deleteCategory(name);
+            if(res > 0) {
+                forwardTo = "?action=delete&success=true&name="+name;
+            } else {
+                forwardTo = "?action=delete&error=true&name="+name;
+            }
         }
 
-        response.sendRedirect(request.getContextPath() + "/admin/categories");
+        response.sendRedirect(request.getContextPath() + "/admin/categories" + forwardTo);
     }
 
     /**

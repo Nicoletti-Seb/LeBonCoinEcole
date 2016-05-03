@@ -6,7 +6,6 @@
 package servlets;
 
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.Collection;
 import javax.ejb.EJB;
 import javax.servlet.RequestDispatcher;
@@ -27,6 +26,8 @@ import modele.School;
 @WebServlet(name = "ServletAdminSchool", urlPatterns = {"/admin/schools"})
 public class ServletAdminSchool extends HttpServlet {
 
+    private static final int NB_MAX_SCHOOL = 20;
+    
     @EJB
     SchoolsManager sm;
 
@@ -35,13 +36,46 @@ public class ServletAdminSchool extends HttpServlet {
             throws ServletException, IOException {
 
         HttpSession session = request.getSession();
-
+        
         if (session.getAttribute("administrator") != null) {
-            Collection<School> allSchools = sm.getAllSchools();
-            request.setAttribute("allSchools", allSchools);
+            
+            String action = request.getParameter("action");
+            if("edit".equals(action)) {
+                String idString = request.getParameter("id");
+                int id = -1;
+                if(!idString.isEmpty()) {
+                    id = Integer.parseInt(idString);
+                }
+                
+                School school = sm.getSchool(id);
+                request.setAttribute("school", school);
+                
+                RequestDispatcher dp = request.getRequestDispatcher("/adminSchools.jsp");
+                dp.forward(request, response);
+            } else {
+                int page = 0;
+                try {
+                    page = Integer.parseInt(request.getParameter("page"));
+                } catch (NumberFormatException e) {
+                    page = 1;
+                }
+                int off = (page - 1) * NB_MAX_SCHOOL;
 
-            RequestDispatcher dp = request.getRequestDispatcher("/adminSchools.jsp");
-            dp.forward(request, response);
+                Collection<School> allSchools = sm.getAllSchools(off, NB_MAX_SCHOOL);
+                request.setAttribute("allSchools", allSchools);
+
+                long nbElement = sm.countSchools();
+
+                //Nb pages
+                int nbPages = (int) nbElement / NB_MAX_SCHOOL;
+                if (nbElement % NB_MAX_SCHOOL > 0) {
+                    nbPages++;
+                }
+                request.setAttribute("nbPages", nbPages);
+
+                RequestDispatcher dp = request.getRequestDispatcher("/adminSchools.jsp?page="+page);            
+                dp.forward(request, response);
+            }
         } else {
             response.sendRedirect(request.getContextPath());
         }
@@ -63,6 +97,21 @@ public class ServletAdminSchool extends HttpServlet {
 
             Address address = new Address(0, adrName, areaCode, city, country);
             sm.createSchool(name, address, link);
+        } else if("update".equals(action)) {
+            String idString = request.getParameter("id");
+            int id = -1;
+            if(!idString.isEmpty()) {
+                id = Integer.parseInt(idString);
+            }
+            String name = request.getParameter("name");
+            String link = request.getParameter("link");
+            String adrName = request.getParameter("address");
+            String areaCode = request.getParameter("areaCode");
+            String city = request.getParameter("city");
+            String country = request.getParameter("country");
+            
+            Address address = new Address(0, adrName, areaCode, city, country);
+            sm.updateSchool(id, name, address, link);
         } else if("delete".equals(action)) {
             String idString = request.getParameter("id");
             int id = -1;

@@ -28,6 +28,14 @@ public class SchoolsManager {
         createSchool("IXAD Ecole des Avocats Nord-Ouest", new Address(1, "place Déliot", "59024", "Lille", "France"), "http://www.onisep.fr/http/redirection/etablissement/identifiant/295");
         createSchool("Institut national des techniques économiques et comptables", new Address(8, "boulevard Louis XIV", "59024", "Lille", "France"), "http://www.onisep.fr/http/redirection/etablissement/identifiant/603");
         createSchool("Médiaquitaine - Centre régional de formation aux carrières des bibliothèques", new Address(10, "A avenue d'Aquitaine", "33172", "Gradignan", "France"), "http://www.onisep.fr/http/redirection/etablissement/identifiant/1267");
+        createSchool("Ecole nationale supérieure de la nature et du paysage", new Address(9, "rue de la Chocolaterie", "41029", "Blois", "France"), "http://www.onisep.fr/http/redirection/etablissement/identifiant/193");
+        createSchool("IXAD Ecole des Avocats Nord-Ouest", new Address(1, "place Déliot", "59024", "Lille", "France"), "http://www.onisep.fr/http/redirection/etablissement/identifiant/295");
+        createSchool("Institut national des techniques économiques et comptables", new Address(8, "boulevard Louis XIV", "59024", "Lille", "France"), "http://www.onisep.fr/http/redirection/etablissement/identifiant/603");
+        createSchool("Médiaquitaine - Centre régional de formation aux carrières des bibliothèques", new Address(10, "A avenue d'Aquitaine", "33172", "Gradignan", "France"), "http://www.onisep.fr/http/redirection/etablissement/identifiant/1267");
+        createSchool("Ecole nationale supérieure de la nature et du paysage", new Address(9, "rue de la Chocolaterie", "41029", "Blois", "France"), "http://www.onisep.fr/http/redirection/etablissement/identifiant/193");
+        createSchool("IXAD Ecole des Avocats Nord-Ouest", new Address(1, "place Déliot", "59024", "Lille", "France"), "http://www.onisep.fr/http/redirection/etablissement/identifiant/295");
+        createSchool("Institut national des techniques économiques et comptables", new Address(8, "boulevard Louis XIV", "59024", "Lille", "France"), "http://www.onisep.fr/http/redirection/etablissement/identifiant/603");
+        createSchool("Médiaquitaine - Centre régional de formation aux carrières des bibliothèques", new Address(10, "A avenue d'Aquitaine", "33172", "Gradignan", "France"), "http://www.onisep.fr/http/redirection/etablissement/identifiant/1267");
     }
 
     public School createSchool(String name, Address address, String link) {
@@ -40,9 +48,44 @@ public class SchoolsManager {
         Query q = em.createQuery("select s from School s");
         return q.getResultList();
     }
+    
+    public Collection<School> getAllSchools(int off, int count) {
+        if (off < 0) {
+            off = 0;
+        }
+        Query q = em.createQuery("select s from School s");
+        
+        q.setFirstResult(off);
+        q.setMaxResults(count);
+        return q.getResultList();
+    }
+    
+    public long countSchools() {
+        Query q = em.createQuery("select count(s) from School s");
+        return (long) q.getSingleResult();
+    }
 
     public School getSchool(int id) {
         return em.find(School.class, id);
+    }
+    
+    public School updateSchool(int id, String name, Address address, String link) {
+        School s = getSchool(id);
+        if (s == null) {
+            return null;
+        }
+        if (!name.isEmpty()) {
+            s.setName(name);
+        }
+        if (address != s.getAddress()) {
+            em.persist(address);
+            s.setAddress(address);
+        }
+        if (!link.isEmpty()) {
+            s.setLink(link);
+        }
+        
+        return s;
     }
     
     public int deleteSchool(int id) {

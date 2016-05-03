@@ -58,7 +58,7 @@ public class InitBDBonCoin {
         sm.createSchoolsTest();
         System.out.println("Initialisation de la base de donnée : School");
         
-        um.createStudentsTest(5);
+        um.createStudentsTest(25);
         System.out.println("Initialisation de la base de donnée : Students");
         
         adm.createAdministratorTest();

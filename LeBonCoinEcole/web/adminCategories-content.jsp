@@ -1,22 +1,41 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix ="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix ="fmt" %>
 
-<section class="container-form" >
-    <form id="compte-form" method="POST" action="${pageContext.request.contextPath}/admin/categories">
-        <h1>Création de catégorie</h1>
+<header>
+    <c:if test="${param['action'] == 'create'}">
+        <c:if test="${param.success}">
+            <div class="success">
+                La catégorie ${param.name} à bien été ajoutée !
+            </div>
+        </c:if>
 
-        <h2>Nom *</h2>
-        <input type="text" name="name" placeholder="Nom" required=""/>
+        <c:if test="${param.error}">
+            <div class="info">
+                La catégorie ${param.name} n'a pas pu être ajoutée...
+            </div>
+        </c:if>
+    </c:if>
+    
+    <c:if test="${param['action'] == 'delete'}">
+        <c:if test="${param.success}">
+            <div class="success">
+                La catégorie ${param.name} à bien été supprimée !
+            </div>
+        </c:if>
 
-        <input type="hidden" name="action" value="create"/>
-        <button type="submit" class="button">Valider</button>
-    </form>
-</section>
+        <c:if test="${param.error}">
+            <div class="info">
+                La catégorie ${param.name} n'a pas pu être supprimée...
+            </div>
+        </c:if>
+    </c:if>
+</header>
 
-<section>
+<section id="list-cat-left">
+    <h1>Liste des catégories</h1>
     <form method="POST" action="${pageContext.request.contextPath}/admin/categories">
         <input type="hidden" name="action" value="delete"/> 
-        <table border="1">
+        <table>
             <tr>
                 <th>Title</th>
                 <th>Supprimer</th>
@@ -29,11 +48,22 @@
                         ${category.name}
                     </td>
                     <td>
-                        <button type="submit" class="button" name="name" value="${category.name}">X</button>
+                        <button type="submit" class="button btn-danger" name="name" value="${category.name}">X</button>
                     </td>
                 </tr>
             </c:forEach>
         </table>
     </form>
 </section>
-            
+
+<section id="form-cat-right">
+    <form method="POST" action="${pageContext.request.contextPath}/admin/categories">
+        <h1>Création de catégorie</h1>
+
+        <h2>Nom *</h2>
+        <input type="text" name="name" placeholder="Nom" required=""/>
+
+        <input type="hidden" name="action" value="create"/>
+        <button type="submit" class="button">Valider</button>
+    </form>
+</section>

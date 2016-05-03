@@ -331,14 +331,62 @@ input[type=checkbox]:checked + label{
     width: 100px;
 }
 
-/* Display compte */
-#displayCompte img {
-    width: 130px;
+/* Admin Category */
+#list-cat-left {
+    width: 600px;
+    display: inline-block;
+    margin: 20px;
+    padding: 30px 150px;
 }
 
-#displayCompte h4 {
-    margin-right: 20px;
-    color: #1D6997;    
+#form-cat-right {
+    width: 250px;
+    display: inline-block;
+    vertical-align: top;
+    margin: 50px 20px;
+}
+
+/* Admin School */
+#table-school {
+    margin: 20px 50px;
+}
+
+#table-school h1 {
+    display: inline-block;
+    color:#f56b2a;
+    font-size: 30px;
+    font-weight: bold;
+    margin: 20px 0px;
+}
+
+#table-school #btn-add{
+    margin: 25px 50px;
+    position: absolute;
+    right: 0
+}
+
+/* Admin Student */
+#display-info {
+    margin: 20px 50px;
+}
+
+#display-info h1 {
+    display: inline-block;
+    color:#f56b2a;
+    font-size: 30px;
+    font-weight: bold;
+    margin: 20px 0px;
+}
+
+#display-info #btn-add{
+    margin: 25px 50px;
+    position: absolute;
+    right: 0
+}
+
+/* Display account */
+#displayCompte img {
+    width: 130px;
 }
 
 /* Create zone clickable */
@@ -470,4 +518,28 @@ a.clickable{
     padding: 10px;
     max-width: 500px;
     border-radius: 5px;
+}
+
+/* table */
+table {
+    //border: 1px solid black;
+    border-collapse: collapse;
+    width: 100%;
+}
+
+th {
+    background-color: #89A6B7;
+    color: white;
+    font-size: 18px;
+    height: 40px;
+    border-bottom: 1px solid white;
+}
+
+td {
+    padding: 5px 15px;
+    border-bottom: 1px solid #ddd;
+}
+
+tr:hover {
+    background-color: #f5f5f5
 }

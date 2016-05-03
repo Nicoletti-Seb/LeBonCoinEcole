@@ -6,7 +6,6 @@
 package servlets;
 
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.Collection;
 import javax.ejb.EJB;
 import javax.servlet.RequestDispatcher;
@@ -16,7 +15,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import manager.SchoolsManager;
 import manager.UsersManager;
+import modele.School;
 import modele.Student;
 
 /**
@@ -26,8 +27,13 @@ import modele.Student;
 @WebServlet(name = "ServletAdminStudent", urlPatterns = {"/admin/students"})
 public class ServletAdminStudent extends HttpServlet {
     
+    private static final int NB_MAX_STUDENT = 20;
+    
     @EJB
     UsersManager um;
+    
+    @EJB
+    private SchoolsManager sm;
     
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -36,10 +42,30 @@ public class ServletAdminStudent extends HttpServlet {
         HttpSession session = request.getSession();
         
         if (session.getAttribute("administrator") != null) {
-            Collection<Student> allStudents = um.getAllStudents(0);
+            int page = 0;
+            try {
+                page = Integer.parseInt(request.getParameter("page"));
+            } catch (NumberFormatException e) {
+                page = 1;
+            }
+            int off = (page - 1) * NB_MAX_STUDENT;
+            
+            Collection<Student> allStudents = um.getAllStudents(off, NB_MAX_STUDENT);
             request.setAttribute("allStudents", allStudents);
             
-            RequestDispatcher dp = request.getRequestDispatcher("/adminStudents.jsp");
+            long nbElement = um.countStudents();
+            
+            //Nb pages
+            int nbPages = (int) nbElement / NB_MAX_STUDENT;
+            if (nbElement % NB_MAX_STUDENT > 0) {
+                nbPages++;
+            }
+            request.setAttribute("nbPages", nbPages);
+            
+            Collection<School> allSchools = sm.getAllSchools();
+            request.setAttribute("allSchools", allSchools);
+            
+            RequestDispatcher dp = request.getRequestDispatcher("/adminStudents.jsp?page="+page);
             dp.forward(request, response);
         } else {
             response.sendRedirect(request.getContextPath());

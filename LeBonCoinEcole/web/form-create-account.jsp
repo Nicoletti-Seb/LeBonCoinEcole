@@ -1,4 +1,4 @@
-<form id="compte-form" method="POST" action="${pageContext.request.contextPath}/account">
+<form id="compte-form" method="POST" action="${pageContext.request.contextPath}/account" enctype="multipart/form-data">
     <h1>Création de compte</h1>
 
     <h2>Nom *</h2>
