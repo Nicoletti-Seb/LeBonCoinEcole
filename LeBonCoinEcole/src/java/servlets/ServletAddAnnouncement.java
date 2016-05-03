@@ -6,6 +6,8 @@
 package servlets;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 import javax.ejb.EJB;
 import javax.servlet.RequestDispatcher;
@@ -18,6 +20,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import manager.AnnouncementsManager;
 import manager.CategoriesManager;
+import modele.Category;
 import modele.Student;
 import utils.FormAddAnnouncementBean;
 import utils.ReaderParts;
@@ -119,7 +122,13 @@ public class ServletAddAnnouncement extends HttpServlet {
         faab.setTitle(ReaderParts.readString(request.getPart("title")));
         faab.setDescription(ReaderParts.readString(request.getPart("description")));
         faab.setPrice(ReaderParts.readNumbers(request.getPart("price")));
-        faab.setCategories(ReaderParts.readCategories(request.getPart("categories")));
         faab.setImage(ReaderParts.readByteArray(request.getPart("image")));
+        
+        List<String> stringCategories = ReaderParts.readStringArray(request.getPart("categories"));
+        List<Category> categoryList = new ArrayList<Category>();
+        for( String s : stringCategories ){
+            categoryList.add(cm.getCategory(s));
+        }
+        faab.setCategories(categoryList);
     }
 }

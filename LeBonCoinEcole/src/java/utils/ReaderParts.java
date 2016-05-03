@@ -52,33 +52,37 @@ public class ReaderParts {
         return result;
     }
     
+    public static List<String> readStringArray(Part part) throws IOException{
+        List<String> result = new ArrayList<>();
+        
+        Scanner scanf = new Scanner(part.getInputStream());
+        while( scanf.hasNext() ){
+            result.add(scanf.nextLine());
+        }
+        scanf.close();
+        
+        return result;
+    }
+    
     public static float readNumbers(Part part)throws IOException {
         if( part == null ){
             return 0f;
         }
         
-        Scanner scanf = new Scanner(part.getInputStream());
-        
+        Scanner scanf = new Scanner(part.getInputStream());   
         float result;
         try{
-            result = scanf.nextFloat();
-        }catch(InputMismatchException e){
+            /*Scanner.nextFloat ne peut pas être utilisé
+              car le formulaire renvoie un nombre avec une virgule
+              au lieu d'un point.*/
+            String value = scanf.nextLine();
+            result = Float.parseFloat(value);
+            System.out.println("read number : " + value + " - " + result);
+        }catch(NumberFormatException e){
             result = 0;
         }
         scanf.close(); 
         return result;
-    }
-    
-    public static List<Category> readCategories( Part part )throws IOException{
-        Scanner scanf = new Scanner(part.getInputStream());
-        List<Category> list = new ArrayList<Category>();
-        
-        while( scanf.hasNext() ){
-            list.add(new Category(scanf.nextLine()));
-        }
-        scanf.close();
-        
-        return list;
     }
     
     public static List<PhoneNumber> readPhonesNumbers( Part part )throws IOException{

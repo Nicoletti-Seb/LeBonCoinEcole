@@ -33,7 +33,7 @@
         <textarea name="description" required></textarea>
 
         <h2>Prix</h2>
-        <input type="number" name="price" min="1" step="0.01" required/>
+        <input type="number" name="price" min="0" step="0.01" required/>
 
         <h2>Image</h2>
         <input type="file" name="image" />
