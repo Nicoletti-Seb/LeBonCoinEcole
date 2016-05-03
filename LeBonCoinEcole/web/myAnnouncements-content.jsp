@@ -6,6 +6,9 @@
      <c:choose>
         <c:when test="${nbPages >= 1}">
             <form id="myAnnouncement-form" method="GET"></form>
+            <form id="removeAnnouncement-form" method="POST">
+                <input type="hidden" name="action" value="remove"/>
+            </form>
             <!-- Pagination top -->
             <nav class="paginations">
                 <c:if test="${param.page > 1}">
@@ -48,8 +51,12 @@
                             <p class="desc">${a.description}</p>
                             <p class="price">${a.price} &euro;</p>
                             <p class="date">${a.startDate}</p>
+                            <button class="button button_remove" type="submit" name="id" value="${a.id}" form="removeAnnouncement-form" >
+                                x
+                            </button>
                         </div>
                     </a>
+                    
                 </c:forEach>
             </section>
             <!-- END Announcements  -->

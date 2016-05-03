@@ -15,6 +15,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import manager.AnnouncementsManager;
+import manager.CategoriesManager;
 import manager.UsersManager;
 import modele.Announcement;
 import modele.Student;
@@ -23,6 +25,9 @@ import modele.Student;
 public class ServletMyAnnouncements extends HttpServlet {
     
     private static final int NB_MAX_ANNOUNCEMENT = 10; 
+    
+    @EJB
+    private AnnouncementsManager am;
     
     @EJB
     private UsersManager um;
@@ -66,6 +71,14 @@ public class ServletMyAnnouncements extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        
+        if( "remove".equals(request.getParameter("action")) ){
+            
+            int idAnouncement = Integer.parseInt(request.getParameter("id"));
+            am.deleteAnnouncement(idAnouncement);
+        }
+        
+        response.sendRedirect(request.getContextPath() + "/myAnnouncements?page=1");
     }
 
     /**
