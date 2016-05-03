@@ -232,6 +232,11 @@ input[type=checkbox]:checked + label{
     margin-left: 5px;
 }
 
+.item .description .button_remove{
+    position: absolute;
+    right: 10px;
+    top: 10px;
+}
 .item .description .title{
     margin: 0px;
     max-width: 600px;
