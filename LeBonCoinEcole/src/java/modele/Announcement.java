@@ -7,7 +7,6 @@ package modele;
 
 import java.io.Serializable;
 import java.sql.Date;
-import java.util.Base64;
 import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
@@ -19,6 +18,7 @@ import javax.persistence.Id;
 import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.xml.bind.DatatypeConverter;
 
 /**
  *
@@ -151,7 +151,9 @@ public class Announcement implements Serializable {
             return "//static.leboncoin.fr/img/no-picture.png";
         }
         
-        return "data:image/png;base64," + Base64.getEncoder().encodeToString(image);
+        // link : pour remplacer Base64
+        // http://stackoverflow.com/questions/14413169/which-java-library-provides-base64-encoding-decoding
+        return "data:image/png;base64," + DatatypeConverter.printBase64Binary(image);
     }
 
     @Override
