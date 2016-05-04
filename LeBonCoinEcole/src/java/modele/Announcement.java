@@ -27,13 +27,14 @@ import javax.xml.bind.DatatypeConverter;
 @Entity
 public class Announcement implements Serializable {
     private static final long serialVersionUID = 1L;
+    
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
     
     private String title;
     
-    @OneToMany(cascade = {CascadeType.PERSIST})
+    @OneToMany
     private List<Category> categories;
    
     @Lob

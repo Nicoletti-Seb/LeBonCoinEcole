@@ -89,6 +89,7 @@ public class CategoriesManager {
     public Category createCategory(String name) {
         Category c = new Category(name);
         em.persist(c);
+        em.flush();
         return c;
     }
     

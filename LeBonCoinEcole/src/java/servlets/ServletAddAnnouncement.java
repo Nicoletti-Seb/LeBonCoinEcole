@@ -8,7 +8,6 @@ package servlets;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
 import javax.ejb.EJB;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -18,8 +17,11 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.servlet.http.Part;
 import manager.AnnouncementsManager;
 import manager.CategoriesManager;
+import manager.UsersManager;
+import modele.Announcement;
 import modele.Category;
 import modele.Student;
 import utils.FormAddAnnouncementBean;
@@ -31,9 +33,13 @@ public class ServletAddAnnouncement extends HttpServlet {
 
     @EJB
     private CategoriesManager cm;
-
+    
     @EJB
     private AnnouncementsManager am;
+    
+    @EJB
+    private UsersManager um;
+    
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
@@ -47,14 +53,32 @@ public class ServletAddAnnouncement extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-
+        
         HttpSession session = request.getSession();
         if (session.getAttribute("formAddAnnouncementBean") == null) {
             session.setAttribute("formAddAnnouncementBean", new FormAddAnnouncementBean());
         }
-        
         request.setAttribute("categories", cm.getAllCategories());
-        RequestDispatcher dp = request.getRequestDispatcher("addAnnouncement.jsp");
+        
+        //Update Announcement
+        String param = "";  
+        if( "update".equals(request.getParameter("action")) ){
+            int id = Integer.parseInt(request.getParameter("id"));
+            Announcement announcement = am.getAnnouncement(id);
+
+            //Value to fill out the form
+            FormAddAnnouncementBean faab = new FormAddAnnouncementBean();
+            faab.setCategories(announcement.getCategories());
+            faab.setTitle(announcement.getTitle());
+            faab.setDescription(announcement.getDescription());
+            faab.setPrice(announcement.getPrice());
+            faab.setImage(announcement.getImage());
+            request.setAttribute("vf", faab);
+            
+            param = "?action=update&id=" + id;  
+        }
+        
+        RequestDispatcher dp = request.getRequestDispatcher("addAnnouncement.jsp"+param);
         dp.forward(request, response);
     }
 
@@ -70,35 +94,66 @@ public class ServletAddAnnouncement extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        StringBuilder params = new StringBuilder();
-        String action = "";
-        
-        if( request.getPart("action") != null ){
-            Scanner scanf = new Scanner(request.getPart("action").getInputStream());
-            action = scanf.nextLine();
-        }
+        String action = ReaderParts.readString(request.getPart("action"));
         
         if ("create".equals(action)) {
-            HttpSession session = request.getSession();
-            FormAddAnnouncementBean faab = (FormAddAnnouncementBean) session.getAttribute("formAddAnnouncementBean");
-            Student student = (Student) session.getAttribute("student");
-            
-            updateFormValue(request);
-            
-            if (am.createAnnouncement(student, faab.getTitle(), faab.getDescription(),
-                    faab.getPrice(), faab.getCategories(), faab.getImage()) != null) {
-                request.setAttribute("success", true);
-                params.append("?success=true");
-            } else {
-                request.setAttribute("error", true);
-                params.append("?error=true");
-            }
+            createAnnouncement(request, response);
+        }
+        else if ("update".equals(action)) {
+            updateAnnouncement(request, response);
+        }
+    }
+    
+    /**
+     * Send the page to create an announcement
+     * @param request
+     * @param response
+     * @throws ServletException
+     * @throws IOException 
+     */
+    private void createAnnouncement(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException{
+        StringBuilder params = new StringBuilder();
+        HttpSession session = request.getSession();
+        Student student = um.synchronised((Student) session.getAttribute("student"));
 
-            params.append("&title=").append(faab.getTitle());
+        FormAddAnnouncementBean faab = updateFormValue(request);
+
+        if (am.createAnnouncement(student, faab.getTitle(), faab.getDescription(),
+                faab.getPrice(), faab.getCategories(), faab.getImage()) != null) {
+            request.setAttribute("success", true);
+            params.append("?success=true");
+        } else {
+            request.setAttribute("error", true);
+            params.append("?error=true");
         }
 
+        params.append("&title=").append(faab.getTitle());
         response.sendRedirect(request.getContextPath() + "/addAnnouncement" + params);
     }
+    
+    /**
+     * Update an announcement
+     * @param request
+     * @param response
+     * @throws ServletException
+     * @throws IOException 
+     */
+    private void updateAnnouncement(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException{
+        HttpSession session = request.getSession();
+        
+        //Get new values
+        FormAddAnnouncementBean faab = updateFormValue(request);
+        
+        //Update Announcement
+        int idAnnouncement = Integer.parseInt(request.getParameter("id"));
+        am.update(idAnnouncement, faab.getTitle(), faab.getDescription(), 
+                faab.getPrice(), faab.getCategories(), faab.getImage());
+        
+        response.sendRedirect(request.getContextPath() + "/announcement?id=" + idAnnouncement);
+    }
+    
 
     /**
      * Returns a short description of the servlet.
@@ -115,20 +170,32 @@ public class ServletAddAnnouncement extends HttpServlet {
      *
      * @param request
      */
-    private void updateFormValue(HttpServletRequest request) throws ServletException, IOException {
+    private FormAddAnnouncementBean updateFormValue(HttpServletRequest request) throws ServletException, IOException {
         HttpSession session = request.getSession();
         FormAddAnnouncementBean faab = (FormAddAnnouncementBean) session.getAttribute("formAddAnnouncementBean");
-
-        faab.setTitle(ReaderParts.readString(request.getPart("title")));
-        faab.setDescription(ReaderParts.readString(request.getPart("description")));
-        faab.setPrice(ReaderParts.readNumbers(request.getPart("price")));
-        faab.setImage(ReaderParts.readByteArray(request.getPart("image")));
-        
-        List<String> stringCategories = ReaderParts.readStringArray(request.getPart("categories"));
+       
         List<Category> categoryList = new ArrayList<Category>();
-        for( String s : stringCategories ){
-            categoryList.add(cm.getCategory(s));
+        for( Part part : request.getParts() ){
+            
+            if( "title".equals(part.getName()) ){
+                faab.setTitle(ReaderParts.readString(part));
+            }
+            else if( "categories".equals(part.getName()) ){
+                categoryList.add(cm.getCategory(ReaderParts.readString(part)));
+            }
+            else if( "description".equals(part.getName()) ){
+                faab.setDescription(ReaderParts.readString(part));
+            }
+            else if( "price".equals(part.getName()) ){
+                faab.setPrice(ReaderParts.readNumbers(part));
+            }
+            else if( "image".equals(part.getName()) ){
+                faab.setImage(ReaderParts.readByteArray(part));
+            }
         }
+        
         faab.setCategories(categoryList);
+        
+        return faab;
     }
 }

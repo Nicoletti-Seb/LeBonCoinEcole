@@ -6,6 +6,7 @@
 package servlets;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Scanner;
@@ -25,6 +26,7 @@ import modele.Email;
 import modele.PhoneNumber;
 import modele.School;
 import modele.Student;
+import utils.AccountBean;
 import utils.ReaderParts;
 
 /**
@@ -101,38 +103,27 @@ public class ServletAccount extends HttpServlet {
      * @throws IOException 
      */
     private Student createAccount(HttpServletRequest request){
+        AccountBean ab;
         try{
-            // identifier si le student n'existe pas deja
-            String username = ReaderParts.readString(request.getPart("username"));
-            Student lookingByUsername = um.lookingByUsername(username);
-
-            // s'il existe deja, on annule la creation et on redirige sur l'index
-            if(lookingByUsername != null) {
-                return null;
-            }
-
-            // school
-            String idSchoolString = ReaderParts.readString(request.getPart("school"));
-            int idSchool = -1;
-            if (!idSchoolString.isEmpty()) {
-                idSchool = Integer.parseInt(idSchoolString);
-            }
-            School school = sm.getSchool(idSchool);
-
-            // profil information
-            String lastname = ReaderParts.readString(request.getPart("lastname"));
-            String firstname = ReaderParts.readString(request.getPart("firstname"));
-            String password = ReaderParts.readString(request.getPart("password"));
-            List<PhoneNumber> listPhones = ReaderParts.readPhonesNumbers(request.getPart("phone"));
-            List<Email> listEmails = ReaderParts.readEmails(request.getPart("email"));
-            byte[] image = ReaderParts.readByteArray(request.getPart("image"));
-
-            // createStudent
-            return um.createStudent(lastname, firstname, username, password, school, listPhones, listEmails, image);
-        
+            ab = readParameters(request);
         }catch( IOException | ServletException e){
             return null;
         }
+
+        // identifier si le student n'existe pas deja
+        Student lookingByUsername = um.lookingByUsername(ab.getUsername());
+
+        // s'il existe deja, on annule la creation et on redirige sur l'index
+        if(lookingByUsername != null) {
+            return null;
+        }
+
+        // school
+        School school = sm.getSchool(ab.getIdSchool());
+
+        // createStudent
+        return um.createStudent(ab.getLastname(), ab.getFirstname(), ab.getUsername(),
+                ab.getPassword(), school, ab.getPhones(), ab.getEmails(), ab.getImage()); 
     }
     
     /**
@@ -143,37 +134,68 @@ public class ServletAccount extends HttpServlet {
      * @throws IOException 
      */
     private boolean updateAccount(HttpServletRequest request){
+        AccountBean ab;
         try{
-            // identifier le student qui modifie
-            HttpSession session = request.getSession();
-            Student student = (Student) session.getAttribute("student");
-            String username = student.getUsername();
-
-             // school
-            String idSchoolString = ReaderParts.readString(request.getPart("school"));
-            int idSchool = -1;
-            if (!idSchoolString.isEmpty()) {
-                idSchool = Integer.parseInt(idSchoolString);
-            }
-            School school = sm.getSchool(idSchool);
-
-            // profil information
-            String lastname = ReaderParts.readString(request.getPart("lastname"));
-            String firstname = ReaderParts.readString(request.getPart("firstname"));
-            String password = ReaderParts.readString(request.getPart("password"));
-            List<PhoneNumber> listPhones = ReaderParts.readPhonesNumbers(request.getPart("phone"));
-            List<Email> listEmails = ReaderParts.readEmails(request.getPart("email"));
-            byte[] image = ReaderParts.readByteArray(request.getPart("image"));
-
-            // updateStudent
-            Student updateStudent = um.updateStudent(lastname, firstname, username, password, school, listPhones, listEmails, image);
-
-            // updateSession
-            session.setAttribute("student", updateStudent);
+            ab = readParameters(request);
         }catch( IOException | ServletException e){
             return false;
         }
+        
+        // identifier le student qui modifie
+        HttpSession session = request.getSession();
+        Student student = (Student) session.getAttribute("student");
+        String username = student.getUsername();
+
+         // school
+        School school = sm.getSchool(ab.getIdSchool());
+        
+        // updateStudent
+        Student updateStudent = um.updateStudent(ab.getLastname(), ab.getFirstname(), username,
+                ab.getPassword(), school, ab.getPhones(), ab.getEmails(), ab.getImage());
+
+        // updateSession
+        session.setAttribute("student", updateStudent);
         return true;
     }
     
+    
+    private AccountBean readParameters( HttpServletRequest request ) 
+            throws IOException, ServletException {
+    
+        AccountBean accountBean = new AccountBean();
+        
+        List<PhoneNumber> phones = new ArrayList<>();
+        List<Email> emails = new ArrayList<>();
+        
+        for( Part part : request.getParts() ){
+            if( "lastname".equals(part.getName()) ){
+                accountBean.setLastname(ReaderParts.readString(part));
+            }
+            else if( "firstname".equals(part.getName()) ){
+                accountBean.setFirstname(ReaderParts.readString(part));
+            }
+            else if( "password".equals(part.getName()) ){
+                accountBean.setPassword(ReaderParts.readString(part));
+            }
+            else if( "phone".equals(part.getName()) ){
+                phones.add( new PhoneNumber( ReaderParts.readString(part) ));
+            }
+            else if( "email".equals(part.getName()) ){
+                emails.add( new Email( ReaderParts.readString(part) ));
+            }
+            else if( "image".equals(part.getName()) ){
+                accountBean.setImage(ReaderParts.readByteArray(part));
+            }
+            else if( "username".equals(part.getName()) ){
+                accountBean.setUsername(ReaderParts.readString(part));
+            }
+            else if( "school".equals(part.getName()) ){
+                accountBean.setIdSchool( (int) ReaderParts.readNumbers(part));
+            }
+        }
+        
+        accountBean.setPhones(phones);
+        accountBean.setEmails(emails);
+        return accountBean;
+    }
 }

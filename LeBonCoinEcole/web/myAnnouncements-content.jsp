@@ -44,7 +44,7 @@
             <!-- Announcements  -->
             <section class="items">
                 <c:forEach var="a" items="${announcements}">
-                    <a href="announcement?id=${a.id}" class="item clickable" >
+                    <a href="addAnnouncement?action=update&id=${a.id}" class="item clickable" >
                         <img src="${a.url}" /> 
                         <div class="description">
                             <h2 class="title"> ${a.title} </h2>

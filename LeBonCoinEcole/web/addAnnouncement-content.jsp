@@ -15,30 +15,58 @@
             </div>
         </c:if>
     </header>
-    <form id="form-AddAnnouncement" action="" method="POST"  enctype="multipart/form-data">
+    <form id="form-AddAnnouncement" method="POST"  enctype="multipart/form-data">
         <h1>Deposer une annonce</h1>
 
         <h2>Categories</h2>
         <aside class="categories">
             <c:forEach var="c" items="${categories}">
-                <input id="${c.name}" class="hidden" type="checkbox" name="categories"  value="${c.name}" />
+                
+                <c:set var="contains" value="false"/>
+                <c:forEach var="e" items="${vf.categories}">
+                    <c:if test="${c.name == e.name}">
+                        <c:set var="contains" value="true"/>
+                    </c:if>
+                </c:forEach>
+                
+                <c:choose>
+                    <c:when test="${contains}">
+                        <input id="${c.name}" class="hidden" type="checkbox" name="categories"  value="${c.name}" checked/>
+                    </c:when>
+
+                    <c:otherwise>
+                        <input id="${c.name}" class="hidden" type="checkbox" name="categories"  value="${c.name}" />    
+                    </c:otherwise>
+                </c:choose>
                 <label class="category" for="${c.name}">${c.name}</label>
+                
             </c:forEach>
         </aside>
 
         <h2>Titre</h2>
-        <input name="title" type="text" placeholder="Titre" required/>
+        <input name="title" type="text" placeholder="Titre" value="${vf.title}" required/>
 
         <h2>Description</h2>
-        <textarea name="description" required></textarea>
+        <textarea name="description" required>${vf.description}</textarea>
 
         <h2>Prix</h2>
-        <input type="number" name="price" min="0" step="0.01" required/>
+        <input type="number" name="price" min="0" step="0.01"  value="${vf.price}" required/>
 
         <h2>Image</h2>
-        <input type="file" name="image" />
-        <input type="hidden" name="action" value="create" />
-        <button type="submit" class="button">Ajouter</button>
+        <input type="file" name="image" value="${vf.image}" />
+        
+        <c:choose>
+            <c:when test="${param.action == 'update'}" >
+                <input type="hidden" name="action" value="update" />
+                <input type="hidden" name="id" value="${param.id}" />
+                <button type="submit" class="button">Modifier</button>
+            </c:when>
+            <c:otherwise>
+                <input type="hidden" name="action" value="create" />
+                <button type="submit" class="button">Ajouter</button>
+            </c:otherwise>
+        </c:choose>
+
 
     </form>
 </section>
