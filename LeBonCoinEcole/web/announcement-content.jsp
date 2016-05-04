@@ -27,7 +27,7 @@
                 <section class="item">
                     <div class="description">
                         <h2 class="title"> ${announcement.title} </h2>
-                        <p class="desc">${announcement.description}</p>
+                        <p class="allDescription">${announcement.description}</p>
                         <p class="price">${announcement.price} &euro;</p>
                         <p class="date">${announcement.startDate}</p>
                     </div>
