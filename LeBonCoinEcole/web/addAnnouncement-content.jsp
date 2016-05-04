@@ -16,7 +16,15 @@
         </c:if>
     </header>
     <form id="form-AddAnnouncement" method="POST"  enctype="multipart/form-data">
-        <h1>Deposer une annonce</h1>
+        <c:choose>
+            <c:when test="${param.type}">
+                <input type="hidden" name="type" value="true" />
+                <h1>Deposer une recherche</h1>
+            </c:when>
+            <c:otherwise>
+                <h1>Deposer une annonce</h1>
+            </c:otherwise>
+        </c:choose>
 
         <h2>Categories</h2>
         <aside class="categories">
@@ -54,6 +62,10 @@
 
         <h2>Image</h2>
         <input type="file" name="image" value="${vf.image}" />
+        
+        <c:if test="${param.type}">
+            <input type="hidden" name="type" value="true" />
+        </c:if>
         
         <c:choose>
             <c:when test="${param.action == 'update'}" >

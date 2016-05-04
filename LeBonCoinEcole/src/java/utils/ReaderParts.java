@@ -46,6 +46,17 @@ public class ReaderParts {
         return result;
     }
     
+    public static boolean readBoolean(Part part)throws IOException {
+        if( part == null ){
+            return false;
+        }
+        
+        Scanner scanf = new Scanner(part.getInputStream());
+        boolean result = Boolean.parseBoolean(scanf.nextLine());
+        scanf.close(); 
+        
+        return result;
+    }
     
     public static float readNumbers(Part part)throws IOException {
         if( part == null ){

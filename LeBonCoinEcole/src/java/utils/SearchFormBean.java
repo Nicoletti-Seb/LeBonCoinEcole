@@ -8,6 +8,7 @@ public class SearchFormBean {
     private int minPrice;
     private int maxPrice;
     private int page;
+    private boolean typeAnnouncement;
 
     public SearchFormBean() {
         page = 1;
@@ -62,5 +63,13 @@ public class SearchFormBean {
 
     public void setPage(int page) {
         this.page = (page >= 1) ? page : 1;
+    }
+    
+    public boolean isTypeAnnouncement() {
+        return typeAnnouncement;
+    }
+
+    public void setTypeAnnouncement(boolean typeAnnouncement) {
+        this.typeAnnouncement = typeAnnouncement;
     }
 }

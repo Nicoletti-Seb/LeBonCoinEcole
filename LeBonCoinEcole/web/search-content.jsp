@@ -2,6 +2,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix ="fmt" %>
 
 <article class="search-container">
+    
     <aside>
         <header>
             <h2>Catégories</h2>
@@ -11,7 +12,21 @@
 
     <section class="items">
         <header>
+            <c:choose>
+                <c:when test="${param.type}">
+                    <h1 class="title">Rechercher des recherches</h1>
+                </c:when>
+                <c:otherwise>
+                    <h1 class="title">Rechercher des annonces</h1>
+                </c:otherwise>
+            </c:choose>
+    
             <form id="search-form" method="GET">
+                
+                <c:if test="${param.type}">
+                    <input type="hidden" name="type" value="true" />
+                </c:if>
+            
                 <div>
                     <select name="school" value="">
                         <c:choose>

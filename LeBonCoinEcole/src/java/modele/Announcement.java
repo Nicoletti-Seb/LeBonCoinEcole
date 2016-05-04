@@ -10,7 +10,6 @@ import java.sql.Date;
 import java.text.DecimalFormat;
 import java.util.List;
 import javax.persistence.Basic;
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -54,16 +53,19 @@ public class Announcement implements Serializable {
     
     @ManyToOne
     private Student student;
+    
+    private boolean isAnnoucement;
 
     public Announcement() { }
     
-    public Announcement(String title, String description) {
+    public Announcement(boolean isAnnouncement, String title, String description) {
         this.title = title;
         this.description = description;
         this.startDate = new Date(System.currentTimeMillis());
+        this.isAnnoucement = isAnnouncement;
     }
     
-    public Announcement(Student student, String title, String description,
+    public Announcement(boolean isAnnouncement, Student student, String title, String description,
             float price, List<Category> categories, byte[] image ) {
         this.student = student;
         this.title = title;
@@ -72,6 +74,7 @@ public class Announcement implements Serializable {
         this.image = image;
         this.startDate = new Date(System.currentTimeMillis());
         this.categories = categories;
+        this.isAnnoucement = isAnnouncement;
     }
     
     public Announcement(String title, String description, Student student) {
@@ -146,6 +149,10 @@ public class Announcement implements Serializable {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public boolean isAnnoucement() {
+        return isAnnoucement;
     }
     
     public String getUrl(){

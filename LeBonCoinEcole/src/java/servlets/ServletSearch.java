@@ -65,8 +65,8 @@ public class ServletSearch extends HttpServlet {
         }
         
         updateParametersToSend(request);
-        SearchFormBean searchFormBean = (SearchFormBean) session.getAttribute("searchFormBean");
-        RequestDispatcher dp = request.getRequestDispatcher("search.jsp?page=" + searchFormBean.getPage());
+        SearchFormBean sfb = (SearchFormBean) session.getAttribute("searchFormBean");
+        RequestDispatcher dp = request.getRequestDispatcher("search.jsp?type="+sfb.isTypeAnnouncement()+"&page=" + sfb.getPage());
         dp.forward(request, response);
     }
 
@@ -88,7 +88,9 @@ public class ServletSearch extends HttpServlet {
             updateCategoriesSelected(session, request.getParameter("category"));
         }
 
-        response.sendRedirect(response.encodeRedirectURL("search?updateCategories=true"));
+        SearchFormBean sfb = (SearchFormBean) session.getAttribute("searchFormBean");
+        response.sendRedirect(response.encodeRedirectURL("search?type="+sfb.isTypeAnnouncement()+
+                "&updateCategories=true"));
     }
 
     /**
@@ -132,9 +134,9 @@ public class ServletSearch extends HttpServlet {
         int off = (sfb.getPage() - 1) * NB_MAX_ANNOUNCEMENT;
 
         Collection<Announcement> announcements = am.searchAnnouncements(off,
-                NB_MAX_ANNOUNCEMENT, sfb.getKey(), sfb.getSchool(), sfb.getAreaCode(), sfb.getMinPrice(), sfb.getMaxPrice(), categoriesSelected);
+                NB_MAX_ANNOUNCEMENT, sfb.isTypeAnnouncement(), sfb.getKey(), sfb.getSchool(), sfb.getAreaCode(), sfb.getMinPrice(), sfb.getMaxPrice(), categoriesSelected);
 
-        long nbElement = am.countSearchAnnouncements(sfb.getKey(), sfb.getSchool(), sfb.getAreaCode(),
+        long nbElement = am.countSearchAnnouncements(sfb.isTypeAnnouncement(), sfb.getKey(), sfb.getSchool(), sfb.getAreaCode(),
                 sfb.getMinPrice(), sfb.getMaxPrice(), categoriesSelected);
 
         //Nb pages
@@ -157,7 +159,7 @@ public class ServletSearch extends HttpServlet {
      *
      * @param request
      */
-    private void updateSearchValue(HttpServletRequest request) {
+    private SearchFormBean updateSearchValue(HttpServletRequest request) {
         HttpSession session = request.getSession();
         SearchFormBean sfb = (SearchFormBean) session.getAttribute("searchFormBean");
         sfb.setSchool(request.getParameter("school"));
@@ -181,6 +183,14 @@ public class ServletSearch extends HttpServlet {
         } catch (NumberFormatException e) {
             sfb.setPage(1);
         }
+        
+        if( request.getParameter("type") != null ){
+            sfb.setTypeAnnouncement(Boolean.parseBoolean(request.getParameter("type")));
+        }else{
+            sfb.setTypeAnnouncement(false);
+        }
+        
+        return sfb;
     }
 
     private void URI(String string) {

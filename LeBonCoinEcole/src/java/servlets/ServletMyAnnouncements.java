@@ -42,6 +42,13 @@ public class ServletMyAnnouncements extends HttpServlet {
             return;
         }
         
+        //type announcement
+        boolean isAnnouncement = false;
+        
+        if( request.getParameter("type") != null ){
+            isAnnouncement = Boolean.parseBoolean( request.getParameter("type") );
+        }
+        
         //the page ask
         int page = 1;
         if( request.getParameter("page") != null){
@@ -51,11 +58,11 @@ public class ServletMyAnnouncements extends HttpServlet {
         // Search user's announcement
         Student student = um.synchronised( (Student) session.getAttribute("student") ) ;
         
-        List<Announcement> announcements = student.getAnnouncements( (page-1) * NB_MAX_ANNOUNCEMENT, NB_MAX_ANNOUNCEMENT);
+        List<Announcement> announcements = student.getAnnouncements( (page-1) * NB_MAX_ANNOUNCEMENT, NB_MAX_ANNOUNCEMENT, isAnnouncement);
         request.setAttribute("announcements", announcements);
         
         //Nb pages
-        int nbAnnoucements = student.getAnnouncements().size() ;
+        int nbAnnoucements = student.countAnnouncement(isAnnouncement);
         int nbPage = nbAnnoucements / NB_MAX_ANNOUNCEMENT;
         if( nbAnnoucements % NB_MAX_ANNOUNCEMENT >  0){
             nbPage++;
@@ -72,12 +79,16 @@ public class ServletMyAnnouncements extends HttpServlet {
             throws ServletException, IOException {
         
         if( "remove".equals(request.getParameter("action")) ){
-            
             int idAnouncement = Integer.parseInt(request.getParameter("id"));
             am.deleteAnnouncement(idAnouncement);
         }
         
-        response.sendRedirect(request.getContextPath() + "/myAnnouncements?page=1");
+        boolean isAnnouncement = false;
+        if( request.getParameter("type") != null ){
+            isAnnouncement = Boolean.parseBoolean(request.getParameter("type"));
+        }
+        
+        response.sendRedirect(request.getContextPath() + "/myAnnouncements?type="+isAnnouncement+"+page=1");
     }
 
     /**

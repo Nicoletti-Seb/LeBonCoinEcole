@@ -3,11 +3,25 @@
 
 <article class="myAnnouncements-container">
     
+    <header>
+        <c:choose>
+            <c:when test="${param.type}">
+                <h1 class="title">Mes recherches</h1>
+            </c:when>
+            <c:otherwise>
+                <h1 class="title">Mes annonces</h1>
+            </c:otherwise>
+        </c:choose>
+    </header>
+    
      <c:choose>
         <c:when test="${nbPages >= 1}">
             <form id="myAnnouncement-form" method="GET"></form>
             <form id="removeAnnouncement-form" method="POST">
                 <input type="hidden" name="action" value="remove"/>
+                <c:if test="${param.type}">
+                    <input type="hidden" name="type" value="true" />
+                </c:if>
             </form>
             <!-- Pagination top -->
             <nav class="paginations">
