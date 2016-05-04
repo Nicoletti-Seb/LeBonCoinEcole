@@ -6,6 +6,7 @@
 package modele;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -32,7 +33,7 @@ public class School implements Serializable {
     @OneToOne(cascade = {CascadeType.REMOVE}, orphanRemoval = true)
     private Address address;
     
-    @OneToMany(mappedBy = "school")
+    @OneToMany(mappedBy = "school", cascade = {CascadeType.REMOVE}, orphanRemoval = false)
     private List<Student> students;
     
     public School() {

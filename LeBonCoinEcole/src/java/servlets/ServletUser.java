@@ -60,6 +60,7 @@ public class ServletUser extends HttpServlet {
             if (session.getAttribute("student") == null &&
                     session.getAttribute("administrator") == null) {
                 if (um.isStudent(username, password)) {
+                    // connexion en tant que user
                     Student s = um.lookingByUsername(username);
                     session.setAttribute("student", s);
                     session.setMaxInactiveInterval(1800);
@@ -67,6 +68,7 @@ public class ServletUser extends HttpServlet {
                     // redirection apres la connection
                     response.sendRedirect(request.getContextPath());
                 } else if(adm.isAdmin(username, password)){
+                    // connexion en tant qu'admin
                     Administrator a = adm.lookingByUsername(username);
                     session.setAttribute("administrator", a);
                     session.setMaxInactiveInterval(1800);
@@ -74,7 +76,7 @@ public class ServletUser extends HttpServlet {
                     // redirection apres la connection
                     response.sendRedirect(request.getContextPath());
                 } else {
-                    // redirection apres la connection
+                    // fail de la connexion
                     response.sendRedirect(request.getContextPath() + "?alert=error");
                 }
             }
@@ -82,7 +84,7 @@ public class ServletUser extends HttpServlet {
             session.invalidate();
 
             // redirection apres la deconnexion
-            response.sendRedirect(request.getContextPath());
+            response.sendRedirect(request.getContextPath() + "?alert=deconnexion");
         }
     }
 }

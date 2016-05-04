@@ -5,8 +5,7 @@
  */
 package utils;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Collection;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.ejb.Singleton;
@@ -17,8 +16,7 @@ import manager.CategoriesManager;
 import manager.SchoolsManager;
 import manager.UsersManager;
 import modele.Address;
-import modele.Email;
-import modele.PhoneNumber;
+import modele.Category;
 import modele.School;
 import modele.Student;
 
@@ -58,28 +56,26 @@ public class InitBDBonCoin {
         sm.createSchoolsTest();
         System.out.println("Initialisation de la base de donnée : School");
         
-        um.createStudentsTest(25);
+        um.createStudentsMiageTest();
+        um.createStudentsTest(500);
         System.out.println("Initialisation de la base de donnée : Students");
         
-        adm.createAdministratorTest();
+        Collection<School> allSchools = sm.getAllSchools();
+        um.associateSchool(allSchools);
+        System.out.println("Initialisation de la base de donnée : Link Students - School");
         
-        am.createAnnouncementsTest();
+        adm.createAdministratorTest();
+        System.out.println("Initialisation de la base de donnée : Administrateurs");
+        
+        School school = sm.createSchool("B", new Address("46 rue de la boustifaille", "06600", "Nice", "France"), "www.google.fr");
+        um.createStudentTest(school);
+        
+        /*Collection<Category> allCategories = cm.getAllCategories();
+        am.createAnnouncementsTest(1500, allCategories);
         System.out.println("Initialisation de la base de donnée : Annoucements");
         
-        PhoneNumber phone1 = new PhoneNumber("123456789");
-        PhoneNumber phone2 = new PhoneNumber("987654321");
-        List<PhoneNumber> listPhones = new ArrayList<PhoneNumber>();
-        listPhones.add(phone1);
-        listPhones.add(phone2);
-        
-        Email email1 = new Email("toto1@toto.fr");
-        Email email2 = new Email("toto2@toto.fr");
-        List<Email> listEmails = new ArrayList<Email>();
-        listEmails.add(email1);
-        listEmails.add(email2);
-        
-        School school = sm.createSchool("B", new Address(30, "rue de la boustifaille", "06600", "Nice", "France"), "www.google.fr");
-        
-        Student student = um.createStudent("nom", "prenom", "username", "pass", null, listPhones, listEmails, null);
+        Collection<Student> allStudents = um.getAllStudents();
+        am.associateStudent(allStudents);
+        System.out.println("Initialisation de la base de donnée : Link Students - School");*/
     }
 }

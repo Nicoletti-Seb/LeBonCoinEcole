@@ -11,7 +11,6 @@ import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import modele.Administrator;
-import modele.Student;
 
 /**
  *
@@ -25,6 +24,8 @@ public class AdminManager {
 
     public void createAdministratorTest() {
         createAdministrator("admin", "pass");
+        createAdministrator("admin2", "pass");
+        createAdministrator("admin3", "pass");
     }
 
     public Administrator createAdministrator(String username, String password) {

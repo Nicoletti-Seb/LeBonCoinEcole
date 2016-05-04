@@ -18,6 +18,7 @@ import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.xml.bind.DatatypeConverter;
+import utils.RandomBuild;
 
 @Entity
 public class Student implements Serializable {
@@ -56,17 +57,11 @@ public class Student implements Serializable {
 
     }
 
-    public Student(String lastname, String firstname, String username) {
+    public Student(String lastname, String firstname) {
         this.lastname = lastname;
         this.firstname = firstname;
-        this.username = username;
-    }
-
-    public Student(String lastname, String firstname, String username, String password) {
-        this.lastname = lastname;
-        this.firstname = firstname;
-        this.username = username;
-        this.password = password;
+        this.username = "" + lastname.charAt(0) + firstname.charAt(0) + RandomBuild.number(5);
+        this.password = "pass";
     }
 
     public Student(String lastname, String firstname, String username, String password,
@@ -80,7 +75,6 @@ public class Student implements Serializable {
         this.phoneNumbers = phoneNumbers;
         this.emails = emails;
         this.image = image;
-        //this.announcements = new ArrayList<Announcement>();
     }
 
     public int getId() {

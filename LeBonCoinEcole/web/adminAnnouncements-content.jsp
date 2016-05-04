@@ -36,6 +36,7 @@
         <input type="hidden" name="action" value="delete"/> 
         <table class="listing">
             <tr>
+                <th style="width: 70px">Image</th>
                 <th>Titre</th>
                 <th>Description</th>
                 <th style="width: 150px;">Prix</th>
@@ -45,6 +46,7 @@
 
             <c:forEach var="announcement" items="${allAnnouncements}">
                 <tr>
+                    <td><img class="image-avatar" src="${announcement.url}"</td>
                     <td>${announcement.title}</td>
                     <td>${announcement.description}</td>
                     <td>${announcement.price} &euro;</td>

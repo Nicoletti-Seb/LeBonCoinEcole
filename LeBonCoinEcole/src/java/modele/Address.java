@@ -20,8 +20,6 @@ public class Address implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
 
-    private int number;
-
     private String name;
 
     @Column(length = 5)
@@ -30,17 +28,29 @@ public class Address implements Serializable {
     private String city;
 
     private String country;
+    
+    private float longitude;
+    
+    private float latitude;
 
     public Address() {
 
     }
 
-    public Address(int number, String name, String areaCode, String city, String country) {
-        this.number = number;
+    public Address(String name, String areaCode, String city, String country) {
         this.name = name;
         this.areaCode = areaCode;
         this.city = city;
         this.country = country;
+    }
+    
+    public Address(String name, String areaCode, String city, String country, float longitude, float latitude) {
+        this.name = name;
+        this.areaCode = areaCode;
+        this.city = city;
+        this.country = country;
+        this.longitude = longitude;
+        this.latitude = latitude;
     }
 
     public int getId() {
@@ -49,14 +59,6 @@ public class Address implements Serializable {
 
     public void setId(int id) {
         this.id = id;
-    }
-
-    public int getNumber() {
-        return number;
-    }
-
-    public void setNumber(int number) {
-        this.number = number;
     }
 
     public String getName() {
@@ -90,6 +92,22 @@ public class Address implements Serializable {
     public void setCountry(String country) {
         this.country = country;
     }
+    
+    public float getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(float longitude) {
+        this.longitude = longitude;
+    }
+
+    public float getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(float latitude) {
+        this.latitude = latitude;
+    }
 
     @Override
     public int hashCode() {
@@ -109,7 +127,7 @@ public class Address implements Serializable {
 
     @Override
     public String toString() {
-        return this.number + ", " + this.name + ", " + this.areaCode 
+        return this.name + ", " + this.areaCode 
                 + " " + this.city + " - " + this.country;
     }
 

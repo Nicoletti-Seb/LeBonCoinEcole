@@ -26,7 +26,7 @@ import modele.School;
 @WebServlet(name = "ServletAdminSchool", urlPatterns = {"/admin/schools"})
 public class ServletAdminSchool extends HttpServlet {
 
-    private static final int NB_MAX_SCHOOL = 20;
+    private static final int NB_MAX_SCHOOL = 15;
     
     @EJB
     SchoolsManager sm;
@@ -94,9 +94,13 @@ public class ServletAdminSchool extends HttpServlet {
             String areaCode = request.getParameter("areaCode");
             String city = request.getParameter("city");
             String country = request.getParameter("country");
+            float longitude = Float.parseFloat(request.getParameter("longitude"));
+            float latitude = Float.parseFloat(request.getParameter("latitude"));
 
-            Address address = new Address(0, adrName, areaCode, city, country);
+            Address address = new Address(adrName, areaCode, city, country, longitude, latitude);
             sm.createSchool(name, address, link);
+            
+            response.sendRedirect(request.getContextPath() + "/admin/schools?action=create&success=true&name="+name);
         } else if("update".equals(action)) {
             String idString = request.getParameter("id");
             int id = -1;
@@ -109,20 +113,31 @@ public class ServletAdminSchool extends HttpServlet {
             String areaCode = request.getParameter("areaCode");
             String city = request.getParameter("city");
             String country = request.getParameter("country");
+            float longitude = Float.parseFloat(request.getParameter("longitude"));
+            float latitude = Float.parseFloat(request.getParameter("latitude"));
             
-            Address address = new Address(0, adrName, areaCode, city, country);
+            Address address = new Address(adrName, areaCode, city, country, longitude, latitude);
             sm.updateSchool(id, name, address, link);
+            
+            School oldSchool = sm.getSchool(id);
+            name = oldSchool.getName();
+            response.sendRedirect(request.getContextPath() + "/admin/schools?action=update&success=true&name="+name);
         } else if("delete".equals(action)) {
             String idString = request.getParameter("id");
             int id = -1;
             if(idString != null && !idString.isEmpty()) {
                 id = Integer.parseInt(idString);
+                School school = sm.getSchool(id);
+                String name = school.getName();
+                int res = sm.deleteSchool(id);
                 
-                sm.deleteSchool(id);
+                if(res > 0) {
+                    response.sendRedirect(request.getContextPath() + "/admin/schools?action=delete&success=true&name="+name);
+                } else {
+                    response.sendRedirect(request.getContextPath() + "/admin/schools?action=delete&error=true&name="+name);
+                }
             }
         }
-
-        response.sendRedirect(request.getContextPath() + "/admin/schools");
     }
 
     /**

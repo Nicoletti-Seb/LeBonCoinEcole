@@ -1,6 +1,20 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix ="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix ="fmt" %>
 
+<header>
+    <c:if test="${param.alert == 'error'}">
+        <div class="info">
+            La connexion a échoué !
+        </div>
+    </c:if>
+    
+    <c:if test="${param.alert == 'deconnexion'}">
+        <div class="info">
+            Vous êtes bien déconnecté. A bientôt !
+        </div>
+    </c:if>
+</header>
+
 <article class="search-container">
     <aside>
         <header>

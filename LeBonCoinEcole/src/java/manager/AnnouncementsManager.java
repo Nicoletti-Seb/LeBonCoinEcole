@@ -6,14 +6,18 @@
 package manager;
 
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Random;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import modele.Announcement;
 import modele.Category;
+import modele.School;
 import modele.Student;
+import utils.RandomBuild;
 
 /**
  *
@@ -25,12 +29,9 @@ public class AnnouncementsManager {
     @PersistenceContext
     private EntityManager em;
         
-    public void createAnnouncementsTest() {
-        for( int i = 0; i < 25; i++ ) {
-            createAnnouncement("A", "Text 1");
-            createAnnouncement("B", "Text 2");
-            createAnnouncement("C", "Text 3");
-            createAnnouncement("D", "Text 4");
+    public void createAnnouncementsTest(int nb, Collection<Category> allCategories) {
+        for(int i = 0; i<nb; i++) {
+            createAnnouncement(null, RandomBuild.title(), RandomBuild.description(), RandomBuild.price(), RandomBuild.categories(allCategories), null);
         }
     }
     
@@ -163,5 +164,20 @@ public class AnnouncementsManager {
         Query q = em.createQuery("delete from Announcement a where a.id=:id");
         q.setParameter("id", id);
         return q.executeUpdate();
-    }   
+    }
+
+    public void associateStudent(Collection<Student> allStudents) {
+        Iterator<Announcement> iterAnnouncement = getAllAnnouncements().iterator();
+        Iterator<Student> iterStudent = allStudents.iterator();
+                
+        while(iterAnnouncement.hasNext()) {
+            Announcement nextAnnouncement = iterAnnouncement.next();
+            if(iterStudent.hasNext()) {
+                Student nextStudent = iterStudent.next();
+                nextAnnouncement.setUser(nextStudent);
+            } else {
+                iterStudent = allStudents.iterator();
+            }
+        }
+    }
 }

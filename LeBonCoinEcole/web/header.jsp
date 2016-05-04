@@ -8,28 +8,30 @@
             <a class="clickable" href="${pageContext.request.contextPath}/index">leboncoin - universitaire</a>
         </div>
         
-        <c:choose>
-            <c:when test="${!empty sessionScope.student}">
-                <form method="POST" action="${pageContext.request.contextPath}/connexion">
-                    <input type="hidden" name="action" value="deconnexion"/>
-                    <button class="button" type="submit">Déconnexion</button>
-                </form>
-            </c:when>
-            <c:when test="${!empty sessionScope.administrator}">
-                <form method="POST" action="${pageContext.request.contextPath}/connexion">
-                    <input type="hidden" name="action" value="deconnexion"/>
-                    <button class="button" type="submit">Déconnexion</button>
-                </form>
-            </c:when>
-            <c:otherwise>
-                <form method="POST" action="${pageContext.request.contextPath}/connexion">
-                    <input type="text" placeholder="Identifiant" name="username"/>
-                    <input type="password" placeholder="Mot de passe" name="password"/>
-                    <input type="hidden" name="action" value="connexion"/>
-                    <button class="button" type="submit">Ok</button>
-                </form>
-            </c:otherwise>
-        </c:choose>
+        <div class="login">
+            <c:choose>
+                <c:when test="${!empty sessionScope.student}">
+                    <form method="POST" action="${pageContext.request.contextPath}/connexion">
+                        <input type="hidden" name="action" value="deconnexion"/>
+                        <button class="button" type="submit">Déconnexion</button>
+                    </form>
+                </c:when>
+                <c:when test="${!empty sessionScope.administrator}">
+                    <form method="POST" action="${pageContext.request.contextPath}/connexion">
+                        <input type="hidden" name="action" value="deconnexion"/>
+                        <button class="button" type="submit">Déconnexion</button>
+                    </form>
+                </c:when>
+                <c:otherwise>
+                    <form method="POST" action="${pageContext.request.contextPath}/connexion">
+                        <input type="text" placeholder="Identifiant" name="username"/>
+                        <input type="password" placeholder="Mot de passe" name="password"/>
+                        <input type="hidden" name="action" value="connexion"/>
+                        <button class="button" type="submit">Ok</button>
+                    </form>
+                </c:otherwise>
+            </c:choose>
+        </div>
     </div>
 
 </header>

@@ -69,6 +69,14 @@ nav .container-menu .menu:hover{
     background: #004775;
 }
 
+.login input{
+    height: 20px;
+    margin-top: 7px;
+    margin-right: 3px;
+    padding-left: 5px;
+    border-radius: 8px;
+}
+
 /* FOOTER */
 footer{
     position: absolute;
@@ -105,6 +113,12 @@ footer{
     width: 200px;
     max-width: 200px;
     height:100%;
+}
+
+/* div google Map */
+#googleMap {
+    width: 250px;
+    height: 200px;
 }
 
 /* container formulaire */
@@ -339,6 +353,14 @@ input[type=checkbox]:checked + label{
     padding: 30px 150px;
 }
 
+#list-cat-left h1 {
+    display: inline-block;
+    color:#f56b2a;
+    font-size: 30px;
+    font-weight: bold;
+    margin: 20px 0px;
+}
+
 #form-cat-right {
     width: 250px;
     display: inline-block;
@@ -382,6 +404,11 @@ input[type=checkbox]:checked + label{
     margin: 25px 50px;
     position: absolute;
     right: 0
+}
+
+.image-avatar {
+    width: 60px;
+    height: 50px;
 }
 
 /* Display account */
@@ -525,6 +552,7 @@ table {
     //border: 1px solid black;
     border-collapse: collapse;
     width: 100%;
+    text-align: center;
 }
 
 th {

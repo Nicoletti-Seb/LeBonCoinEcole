@@ -37,8 +37,6 @@ public class CategoriesManager {
         createCategory("Ventes immobilières");
         createCategory("Locations");
         createCategory("Colocations");
-        createCategory("Bureaux & Commerces");
-        createCategory("Locations & Gîtes");
         createCategory("Chambres d'hôtes");
         createCategory("Campings");
         createCategory("Hôtels");
@@ -58,14 +56,10 @@ public class CategoriesManager {
         createCategory("Jeux & Jouets");
         createCategory("Vins & Gastronomie");
         createCategory("Matériel Agricole");
-        createCategory("Transport - Manutention");
         createCategory("Outillage");
-        createCategory("Equipements Industriels");
-        createCategory("Restauration - Hôtellerie");
         createCategory("Fournitures de Bureau");
         createCategory("Commerces & Marchés");
         createCategory("Matériel Médical");
-        createCategory("Prestations de services");
         createCategory("Billetterie");
         createCategory("Evénements");
         createCategory("Cours particuliers");
@@ -79,7 +73,6 @@ public class CategoriesManager {
         createCategory("Jardinage");
         createCategory("Vêtements");
         createCategory("Chaussures");
-        createCategory("Accessoires & Bagagerie");
         createCategory("Montres & Bijoux");
         createCategory("Equipement bébé");
         createCategory("Vêtements bébé");

@@ -11,7 +11,8 @@
 
         <c:if test="${param.error}">
             <div class="info">
-                La catégorie ${param.name} n'a pas pu être ajoutée...
+                La catégorie ${param.name} n'a pas pu être ajoutée...<br>
+                Elle existe surement déjà...
             </div>
         </c:if>
     </c:if>
@@ -25,7 +26,8 @@
 
         <c:if test="${param.error}">
             <div class="info">
-                La catégorie ${param.name} n'a pas pu être supprimée...
+                La catégorie ${param.name} n'a pas pu être supprimée...<br>
+                Il y a encore des annonces de cette catégorie...                
             </div>
         </c:if>
     </c:if>
@@ -61,7 +63,7 @@
         <h1>Création de catégorie</h1>
 
         <h2>Nom *</h2>
-        <input type="text" name="name" placeholder="Nom" required=""/>
+        <input type="text" name="name" placeholder="Nom" required="" maxlength="25"/>
 
         <input type="hidden" name="action" value="create"/>
         <button type="submit" class="button">Valider</button>

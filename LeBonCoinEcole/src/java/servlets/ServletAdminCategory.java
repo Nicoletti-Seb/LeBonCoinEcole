@@ -54,7 +54,9 @@ public class ServletAdminCategory extends HttpServlet {
         
         if ("create".equals(action)) {
             String name = request.getParameter("name");
-
+            if(name.length() > 25) {
+                name = name.substring(0, 25);
+            }
             Category category = cm.getCategory(name);
 
             if (category == null) {

@@ -51,7 +51,7 @@
 
             <c:forEach var="student" items="${allStudents}">
                 <tr>
-                    <td></td>
+                    <td><img class="image-avatar" src="${student.url}" /></td>
                     <td>${student.lastname}</td>
                     <td>${student.firstname}</td>
                     <td>${student.username}</td>
