@@ -266,14 +266,12 @@ input[type=checkbox]:checked + label{
     height: 50px;
     text-overflow: ellipsis;
     overflow: hidden;
-    word-wrap: break-word;
-    
 }
 .item .description .price{
     font-weight: bold;
     color: #f56b2a;
     font-size: 25px;
-    margin: 0px;
+    margin-top: 0px;
 }
 
 .item .description .date{
@@ -326,6 +324,11 @@ input[type=checkbox]:checked + label{
     width: 100px;
     height: 100px;
     margin: 8px auto;
+}
+
+.allDescription{
+    margin: 10px;
+    word-wrap: break-word;
 }
 
 /* Formulaire création de compte */
