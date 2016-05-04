@@ -86,7 +86,7 @@ public class ServletIndex extends HttpServlet {
 
         //Announcements
         Collection<Announcement> announcements = am.searchAnnouncements(0,
-                NB_MAX_ANNOUNCEMENT, "", "", "", 0, 0, categoriesSelected);
+                NB_MAX_ANNOUNCEMENT, false, "", "", "", 0, 0, categoriesSelected);
         request.setAttribute("announcements", announcements);
     }
 

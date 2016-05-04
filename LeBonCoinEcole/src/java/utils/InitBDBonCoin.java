@@ -63,7 +63,7 @@ public class InitBDBonCoin {
         
         adm.createAdministratorTest();
         
-        am.createAnnouncementsTest();
+        am.createAnnouncementsTest(false);
         System.out.println("Initialisation de la base de donnée : Annoucements");
         
         PhoneNumber phone1 = new PhoneNumber("123456789");

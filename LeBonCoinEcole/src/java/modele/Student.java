@@ -6,6 +6,7 @@
 package modele;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
@@ -155,13 +156,27 @@ public class Student implements Serializable {
         this.image = image;
     }
     
-    public List<Announcement> getAnnouncements(int off, int nb) {
-        int end  = off + nb;
-        if( end > announcements.size() ){
-            end = announcements.size();
+    public List<Announcement> getAnnouncements(int off, int nb, boolean isAnnouncement) {
+        List<Announcement> result = new ArrayList<>();
+        for( int i = off; i < announcements.size() && result.size() < nb; i++ ){
+        
+            if( announcements.get(i).isAnnoucement() == isAnnouncement ){
+                result.add(announcements.get(i));
+            }
+        }
+        return result;
+    }
+    
+    public int countAnnouncement(boolean isAnnouncement){
+        int count = 0;
+        
+        for( Announcement a : announcements ){
+            if( a.isAnnoucement() == isAnnouncement ){
+                count++;
+            }
         }
         
-        return announcements.subList(off, end);
+        return count;
     }
 
     public List<Announcement> getAnnouncements() {

@@ -16,6 +16,7 @@ public class FormAddAnnouncementBean {
     private String description;
     private float price;
     private byte[] image;
+    private boolean typeAnnouncement;
 
     public FormAddAnnouncementBean() {
         categories = new ArrayList<>();
@@ -64,5 +65,13 @@ public class FormAddAnnouncementBean {
 
     public void setImage(byte[] image) {
         this.image = image;
+    }
+
+    public boolean isTypeAnnouncement() {
+        return typeAnnouncement;
+    }
+
+    public void setTypeAnnouncement(boolean typeAnnouncement) {
+        this.typeAnnouncement = typeAnnouncement;
     }
 }

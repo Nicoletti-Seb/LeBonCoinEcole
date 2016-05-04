@@ -47,14 +47,20 @@ header .container-title form{
     top: 0;
 }
 
+header .title{
+    color: #f56b2a;
+}
+
 nav .container-menu{
     display: flex;
     width: 100%;
     height: auto;
     background-color: #1D6997;
     color: white;
-    font-size: 20px;
+    font-size: 16px;
     text-align: center;
+    font-weight: bold;
+    
 }
 nav .container-menu .menu{
     display: block;

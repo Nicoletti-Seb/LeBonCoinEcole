@@ -119,7 +119,7 @@ public class ServletAddAnnouncement extends HttpServlet {
 
         FormAddAnnouncementBean faab = updateFormValue(request);
 
-        if (am.createAnnouncement(student, faab.getTitle(), faab.getDescription(),
+        if (am.createAnnouncement(faab.isTypeAnnouncement(), student, faab.getTitle(), faab.getDescription(),
                 faab.getPrice(), faab.getCategories(), faab.getImage()) != null) {
             request.setAttribute("success", true);
             params.append("?success=true");
@@ -127,6 +127,7 @@ public class ServletAddAnnouncement extends HttpServlet {
             request.setAttribute("error", true);
             params.append("?error=true");
         }
+        
 
         params.append("&title=").append(faab.getTitle());
         response.sendRedirect(request.getContextPath() + "/addAnnouncement" + params);
@@ -191,6 +192,9 @@ public class ServletAddAnnouncement extends HttpServlet {
             }
             else if( "image".equals(part.getName()) ){
                 faab.setImage(ReaderParts.readByteArray(part));
+            }
+            else if( "type".equals(part.getName()) ){
+                faab.setTypeAnnouncement(ReaderParts.readBoolean(part));
             }
         }
         

@@ -25,12 +25,12 @@ public class AnnouncementsManager {
     @PersistenceContext
     private EntityManager em;
         
-    public void createAnnouncementsTest() {
+    public void createAnnouncementsTest(boolean isAnnouncement) {
         for( int i = 0; i < 25; i++ ) {
-            createAnnouncement("A", "Text 1");
-            createAnnouncement("B", "Text 2");
-            createAnnouncement("C", "Text 3");
-            createAnnouncement("D", "Text 4");
+            createAnnouncement(isAnnouncement, "A", "Text 1");
+            createAnnouncement( isAnnouncement, "B", "Text 2");
+            createAnnouncement(isAnnouncement, "C", "Text 3");
+            createAnnouncement(isAnnouncement, "D", "Text 4");
         }
     }
     
@@ -38,15 +38,15 @@ public class AnnouncementsManager {
        return em.find(Announcement.class, id);
     }
 
-    public Announcement createAnnouncement(String title, String description) {
-        Announcement a = new Announcement(title, description);
+    public Announcement createAnnouncement(boolean isAnnouncement, String title, String description) {
+        Announcement a = new Announcement( isAnnouncement, title, description);
         em.persist(a);
         return a;
     }
     
-     public Announcement createAnnouncement(Student student, String title, String description,
+     public Announcement createAnnouncement(boolean isAnnouncement, Student student, String title, String description,
              float price, List<Category> categories, byte[] image ) {
-        Announcement a = new Announcement(student, title, description, price, categories, image);
+        Announcement a = new Announcement(isAnnouncement, student, title, description, price, categories, image);
         em.persist(a);
         em.flush();
         return a;
@@ -57,21 +57,15 @@ public class AnnouncementsManager {
         return q.getResultList();
     }
     
-    public Collection<Announcement> searchAnnouncements(int off, int end, String key, String nameSchool,
+    public Collection<Announcement> searchAnnouncements(int off, int end, boolean isAnnouncement, String key, String nameSchool,
                 String areaCode, int minPrice, int maxPrice, List<String> categories) {
-        String where = constructSearchWhereRequest(key, nameSchool, areaCode, minPrice, maxPrice, categories);
-        Query q = null;
-        if( where.isEmpty() ){
-            q = em.createQuery("select a from Announcement a order by a.startDate desc");
-        }
-        else{
-            System.out.println("Request : " + "select a from Announcement a where " + where + " order by a.startDate desc");
-            q = em.createQuery("select distinct a from Announcement a where " + where + " order by a.startDate desc");
-            
-            
-           if( !categories.isEmpty() ){
-               q.setParameter("categories", categories);
-            }
+        String where = constructSearchWhereRequest(isAnnouncement, key, nameSchool, areaCode, minPrice, maxPrice, categories);
+        System.out.println("Request : " + "select a from Announcement a where " + where + " order by a.startDate desc");
+        Query q = em.createQuery("select distinct a from Announcement a where " + where + " order by a.startDate desc");
+
+
+       if( !categories.isEmpty() ){
+           q.setParameter("categories", categories);
         }
         
         q.setFirstResult(off);
@@ -81,60 +75,47 @@ public class AnnouncementsManager {
     }
     
     
-    private String constructSearchWhereRequest(String key, String nameSchool,
+    private String constructSearchWhereRequest(boolean isAnnouncement, String key, String nameSchool,
                 String areaCode, int minPrice, int maxPrice, List<String> categories){
         StringBuilder where = new StringBuilder();
         
+        where.append(" a.isAnnoucement = ").append(isAnnouncement);
+        
         //KEY WORD
         if( !key.isEmpty() ){
-           where.append(" (a.title like '%").append(key).append("%' or a.description like '%").append(key).append("%') ");
+           where.append(" and (a.title like '%").append(key).append("%' or a.description like '%").append(key).append("%') ");
         }
         
         //SCHOOL
         if( !nameSchool.isEmpty() ){
-            if( ! where.toString().isEmpty() ){
-                where.append(" and ");
-            }
-            where.append(" a.student.school.name = '").append(nameSchool).append("'");
+            where.append(" and a.student.school.name = '").append(nameSchool).append("'");
         }
         
         //AREA CODE
         if( !areaCode.isEmpty() ){
-             if( ! where.toString().isEmpty() ){
-                where.append(" and ");
-            }
-            where.append(" a.student.school.address.areaCode like '").append(areaCode).append("%'");;
+            where.append(" and a.student.school.address.areaCode like '").append(areaCode).append("%'");;
         }
         
         //CATEGORIES
         if( !categories.isEmpty() ){
-            if( ! where.toString().isEmpty() ){
-                where.append(" and ");
-            }
-            where.append( " a.categories in ( select c from Category c where c.name in :categories ) ");
+            where.append( " and a.categories in ( select c from Category c where c.name in :categories ) ");
         }
         
         //PRICE
         if( minPrice > 0 ){
-            if( ! where.toString().isEmpty() ){
-                where.append(" and ");
-            }
-            where.append(minPrice).append(" <= a.price ");
+            where.append(" and ").append(minPrice).append(" <= a.price ");
         }
         
         if( maxPrice > 0 ){
-            if( ! where.toString().isEmpty() ){
-                where.append(" and ");
-            }
-            where.append("a.price <= ").append(maxPrice);
+            where.append(" and ").append("a.price <= ").append(maxPrice);
         }
         
         return where.toString();
     }
     
-    public long countSearchAnnouncements( String key, String nameSchool,
+    public long countSearchAnnouncements( boolean isAnnouncement, String key, String nameSchool,
                 String areaCode, int minPrice, int maxPrice, List<String> categories) {
-        String where = constructSearchWhereRequest(key, nameSchool, areaCode, minPrice, maxPrice, categories);
+        String where = constructSearchWhereRequest(isAnnouncement, key, nameSchool, areaCode, minPrice, maxPrice, categories);
         Query q = null;
         if( where.isEmpty() ){
             q = em.createQuery("select count(a) from Announcement a");

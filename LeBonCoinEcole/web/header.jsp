@@ -37,9 +37,12 @@
     <div class="container-menu">
         <c:choose>
             <c:when test="${!empty sessionScope.student}">
-                <div class="menu"><a class="clickable" href="search">Rechercher</a></div>
+                <div class="menu"><a class="clickable" href="search">Rechercher une annonce</a></div>
+                <div class="menu"><a class="clickable" href="search?type=true">Rechercher une recherche</a></div>
                 <div class="menu"><a class="clickable" href="addAnnouncement">Deposer une annonce</a></div>
+                <div class="menu"><a class="clickable" href="addAnnouncement?type=true">Deposer une recherche</a></div>
                 <div class="menu"><a class="clickable" href="myAnnouncements">Mes annonces</a></div>
+                <div class="menu"><a class="clickable" href="myAnnouncements?type=true">Mes recherches</a></div>
                 <div class="menu"><a class="clickable" href="account">Mon compte</a></div>   
             </c:when>
             <c:when test="${!empty sessionScope.administrator}">
@@ -50,7 +53,8 @@
                 <div class="menu"><a class="clickable" href="${pageContext.request.contextPath}/admin/announcements">Annonces</a></div>
             </c:when>
             <c:otherwise>
-                <div class="menu"><a class="clickable" href="search">Rechercher</a></div>
+                <div class="menu"><a class="clickable" href="search">Rechercher une annonce</a></div>
+                <div class="menu"><a class="clickable" href="search?type=true">Rechercher une recherche</a></div>
                 <div class="menu"><a class="clickable" href="account">Créer mon compte</a></div>
             </c:otherwise>
         </c:choose>
