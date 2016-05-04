@@ -49,32 +49,36 @@
                         </c:forEach>
                     </ul>
                 
-                <a href="http://${school.link}"  target="_blank">Détails</a>
-                
-                <div id="googleMap">
+                <c:if test="${not empty school.link}">
+                    <a href="http://${school.link}"  target="_blank">Détails</a>
+                </c:if>
                     
-                </div>
-                
-                <script src="http://maps.googleapis.com/maps/api/js"></script>
-                <script>
-                    var myCenter=new google.maps.LatLng(${school.address.latitude}, ${school.address.longitude});
-                    
-                    function initialize() {
-                        var mapProp = {
-                            center:myCenter,
-                            zoom:15,
-                            mapTypeId:google.maps.MapTypeId.ROADMAP
-                        };
-                        var map=new google.maps.Map(document.getElementById("googleMap"),mapProp);
+                <c:if test="${school.address.latitude == 0} && ${school.address.longitude == 0}">
+                    <div id="googleMap">
 
-                        var marker=new google.maps.Marker({
-                            position:myCenter,
-                        });
+                    </div>
 
-                        marker.setMap(map);
-                    }
-                    google.maps.event.addDomListener(window, 'load', initialize);
-                </script>
+                    <script src="http://maps.googleapis.com/maps/api/js"></script>
+                    <script>
+                        var myCenter=new google.maps.LatLng(${school.address.latitude}, ${school.address.longitude});
+
+                        function initialize() {
+                            var mapProp = {
+                                center:myCenter,
+                                zoom:15,
+                                mapTypeId:google.maps.MapTypeId.ROADMAP
+                            };
+                            var map=new google.maps.Map(document.getElementById("googleMap"),mapProp);
+
+                            var marker=new google.maps.Marker({
+                                position:myCenter,
+                            });
+
+                            marker.setMap(map);
+                        }
+                        google.maps.event.addDomListener(window, 'load', initialize);
+                    </script>
+                </c:if>
             </aside>
 
         </c:when>

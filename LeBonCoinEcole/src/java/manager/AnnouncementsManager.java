@@ -28,7 +28,14 @@ public class AnnouncementsManager {
     
     @PersistenceContext
     private EntityManager em;
-        
+       
+    public void createAnnouncementsTest(boolean isAnnouncement, int nb) {
+        for(int i = 0; i< nb; i++) {
+            createAnnouncement(isAnnouncement, null, RandomBuild.title(), RandomBuild.description(),
+                    RandomBuild.price(), null, null);
+        }
+    }    
+    
     public void createAnnouncementsTest(boolean isAnnouncement, int nb, Collection<Category> allCategories) {
         for(int i = 0; i< nb; i++) {
             createAnnouncement(isAnnouncement, null, RandomBuild.title(), RandomBuild.description(),

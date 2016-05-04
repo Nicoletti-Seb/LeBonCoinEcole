@@ -71,7 +71,7 @@ public class AccountBean {
     }
 
     public void setPhones(List<PhoneNumber> phones) {
-        this.phones = ( phones != null )? phones : new ArrayList<>();
+        this.phones = ( phones != null )? phones : new ArrayList<PhoneNumber>();
     }
 
     public List<Email> getEmails() {
@@ -79,7 +79,7 @@ public class AccountBean {
     }
 
     public void setEmails(List<Email> emails) {
-        this.emails = ( emails != null )? emails : new ArrayList<>();
+        this.emails = ( emails != null )? emails : new ArrayList<Email>();
     }
 
     public byte[] getImage() {

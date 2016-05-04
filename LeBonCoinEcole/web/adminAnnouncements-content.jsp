@@ -47,7 +47,9 @@
             <c:forEach var="announcement" items="${allAnnouncements}">
                 <tr>
                     <td><img class="image-avatar" src="${announcement.url}"</td>
-                    <td>${announcement.title}</td>
+                    <td><a href="${pageContext.request.contextPath}/announcement?id=${announcement.id}">
+                        ${announcement.title}
+                    </a></td>
                     <td>${announcement.description}</td>
                     <td>${announcement.price} &euro;</td>
                     <td>${announcement.startDate}</td>

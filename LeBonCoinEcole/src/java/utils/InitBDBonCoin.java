@@ -70,8 +70,9 @@ public class InitBDBonCoin {
         School school = sm.createSchool("B", new Address("46 rue de la boustifaille", "06600", "Nice", "France"), "www.google.fr");
         um.createStudentTest(school);
         
-        Collection<Category> allCategories = cm.getAllCategories();
-        am.createAnnouncementsTest(false, 1500, allCategories);
+        //Collection<Category> allCategories = cm.getAllCategories();
+        am.createAnnouncementsTest(false, 1000);
+        am.createAnnouncementsTest(true, 1000);
         System.out.println("Initialisation de la base de donnée : Annoucements (recherche)");
         
         
