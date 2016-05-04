@@ -1,3 +1,4 @@
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <section class="categories">
     <form action="" method="post">
         <c:forEach var="c" items="${categories}">
@@ -16,9 +17,9 @@
                     <label class="category category_selected" for="${c.name}">${c.name}</label>
                 </c:when>
 
-                <c:when test="${not contains}">
+                <c:otherwise>
                     <label class="category" for="${c.name}">${c.name}</label>
-                </c:when>
+                </c:otherwise>
             </c:choose>
 
         </c:forEach>

@@ -36,19 +36,21 @@ public class AnnouncementsManager {
     }
     
     public Announcement getAnnouncement (int id ){
-        return em.find(Announcement.class, id);
+       return em.find(Announcement.class, id);
     }
 
     public Announcement createAnnouncement(String title, String description) {
         Announcement a = new Announcement(title, description);
-        em.merge(a);
+        em.persist(a);
         return a;
     }
     
      public Announcement createAnnouncement(Student student, String title, String description,
              float price, List<Category> categories, byte[] image ) {
         Announcement a = new Announcement(student, title, description, price, categories, image);
-        return em.merge(a);
+        em.persist(a);
+        em.flush();
+        return a;
     }
     
     public Collection<Announcement> getAllAnnouncements() {
@@ -179,5 +181,19 @@ public class AnnouncementsManager {
                 iterStudent = allStudents.iterator();
             }
         }
+    }  
+    
+    public Announcement update(int id, String title, String description,
+            float price, List<Category> categories, byte[] image){
+        Announcement a = getAnnouncement(id);
+        a.setTitle(title);
+        a.setDescription(description);
+        a.setPrice(price);
+        a.setCategories(categories);
+        
+        if( image != null ){
+            a.setImage(image);
+        }
+        return a;
     }
 }

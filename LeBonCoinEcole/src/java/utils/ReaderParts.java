@@ -8,14 +8,8 @@ package utils;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.InputMismatchException;
-import java.util.List;
 import java.util.Scanner;
 import javax.servlet.http.Part;
-import modele.Category;
-import modele.Email;
-import modele.PhoneNumber;
 
 /**
  *
@@ -52,17 +46,6 @@ public class ReaderParts {
         return result;
     }
     
-    public static List<String> readStringArray(Part part) throws IOException{
-        List<String> result = new ArrayList<>();
-        
-        Scanner scanf = new Scanner(part.getInputStream());
-        while( scanf.hasNext() ){
-            result.add(scanf.nextLine());
-        }
-        scanf.close();
-        
-        return result;
-    }
     
     public static float readNumbers(Part part)throws IOException {
         if( part == null ){
@@ -77,35 +60,10 @@ public class ReaderParts {
               au lieu d'un point.*/
             String value = scanf.nextLine();
             result = Float.parseFloat(value);
-            System.out.println("read number : " + value + " - " + result);
         }catch(NumberFormatException e){
             result = 0;
         }
         scanf.close(); 
         return result;
-    }
-    
-    public static List<PhoneNumber> readPhonesNumbers( Part part )throws IOException{
-        Scanner scanf = new Scanner(part.getInputStream());
-        List<PhoneNumber> list = new ArrayList<PhoneNumber>();
-        
-        while( scanf.hasNext() ){
-            list.add(new PhoneNumber(scanf.nextLine()));
-        }
-        scanf.close();
-        
-        return list;
-    }
-    
-    public static List<Email> readEmails( Part part )throws IOException{
-        Scanner scanf = new Scanner(part.getInputStream());
-        List<Email> list = new ArrayList<Email>();
-        
-        while( scanf.hasNext() ){
-            list.add(new Email(scanf.nextLine()));
-        }
-        scanf.close();
-        
-        return list;
     }
 }
